@@ -1,0 +1,11 @@
+asgiref==3.3.1
+Django==3.1.7
+mysqlclient==2.0.3
+pytz==2020.5
+sqlparse==0.4.1
+django-redis==4.12.1
+django-cachalot==2.3.3
+djangorestframework==3.12.2
+drf-yasg==1.20.0
+django-filter==2.4.0
+django-cors-headers==3.7.0
