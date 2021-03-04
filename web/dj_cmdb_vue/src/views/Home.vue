@@ -162,11 +162,6 @@ export default {
             url: 'model'
           },
           {
-            name: '属性管理',
-            icon: 'icon-password',
-            url: 'field'
-          },
-          {
             name: '关联类型',
             icon: 'icon-pipeline',
             url: 'relation'

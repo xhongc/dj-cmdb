@@ -54,7 +54,7 @@
           {{group.alias}}
           <div slot="content" class="f13">
             <div style="display: flex;width: 100%;flex-wrap: wrap;">
-              <div v-for="(ci,index) in group.schema" :key="'ci'+index" class="card-demo">
+              <div v-for="(ci,index) in group.schema" :key="'ci'+index" class="card-demo" @click="handleSchemaDetail(ci.id)">
                 <bk-card title="卡片标题" :show-foot="false" :show-head="false" style="width: 100%;height: 100%;">
                   <div style="display: flex;" class="a-card">
                     <bk-icon type="pc" style="font-size: 36px;line-height: 72px;margin-left: 10px;color: #3A84FF;" />
@@ -144,6 +144,9 @@ export default {
       }).catch((error) => {
         this.$bkMessage({theme: 'error', message: error.message})
       })
+    },
+    handleSchemaDetail (schemaID) {
+      this.$router.push({name: 'model_detail', params: {'schemaID': schemaID}})
     }
   }
 }

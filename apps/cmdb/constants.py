@@ -7,6 +7,7 @@ class ValueTypeEnum:
     TIME = "5"
     JSON = "6"
     CHAR = "7"
+    ENUM = "8"
 
 
 VALUE_TYPE_MAP = (
@@ -18,4 +19,5 @@ VALUE_TYPE_MAP = (
     (ValueTypeEnum.TIME, "时间"),
     (ValueTypeEnum.JSON, "JSON"),
     (ValueTypeEnum.CHAR, "字符串"),
+    (ValueTypeEnum.ENUM, "枚举"),
 )

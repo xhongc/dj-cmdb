@@ -15,6 +15,7 @@ class CISchemaViewSet(mixins.ListModelMixin,
                       mixins.CreateModelMixin,
                       mixins.UpdateModelMixin,
                       mixins.DestroyModelMixin,
+                      mixins.RetrieveModelMixin,
                       GenericViewSet):
     """
     list:查看模型
@@ -30,7 +31,7 @@ class CISchemaViewSet(mixins.ListModelMixin,
             return CISchemaSerializer
         return CISchemaSerializer
 
-    @action(methods=["post"], detail=True)
+    @action(methods=["post"], detail=False)
     def add_relation(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -115,9 +116,5 @@ class CIViewSet(mixins.RetrieveModelMixin,
         serializer.is_valid(raise_exception=True)
         ci = self.get_queryset().filter(id=serializer.validated_data["id"], **kwargs).first()
         field_value = serializer.validated_data["field_value"]
-        field_mapping = CIField.objects.get_field_mapping(names=list(field_value.keys()))
-        for field, value in field_value.items():
-            value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
-            value_model.objects.update_or_create(ci_id=ci.id, field_id=field_mapping[field]["id"],
-                                                 defaults={"value": value})
+        CI.objects.modify(instance_id=ci.id, schema_id=kwargs["schema_id"], ci_data=field_value)
         return Response({})

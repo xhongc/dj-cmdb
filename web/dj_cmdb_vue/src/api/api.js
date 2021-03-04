@@ -23,3 +23,6 @@ export const ciRelation = params => {
 export const createCiRelation = params => {
   return axios.post(`${host}/relation/`, params)
 }
+export const readCISchema = (pk, params) => {
+  return axios.get(`${host}/ci_schema/${pk}`, params)
+}

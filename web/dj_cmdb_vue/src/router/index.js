@@ -3,9 +3,9 @@ import Router from 'vue-router'
 import home from '@/views/Home.vue'
 import model from '@/views/Model.vue'
 import resource from '@/views/Resource.vue'
-import field from '@/views/Field.vue'
 import relation from '@/views/Relation.vue'
 import topo from '@/views/Topo.vue'
+import modelDetail from '@/views/ModelDetail.vue'
 Vue.use(Router)
 
 const includPush = Router.prototype.push
@@ -32,11 +32,6 @@ export default new Router({
         component: resource
       },
       {
-        path: '/field/',
-        name: 'field',
-        component: field
-      },
-      {
         path: '/relation/',
         name: 'relation',
         component: relation
@@ -45,6 +40,11 @@ export default new Router({
         path: '/topo/',
         name: 'topo',
         component: topo
+      },
+      {
+        path: '/model_detail/',
+        name: 'model_detail',
+        component: modelDetail,
       }
     ]
   }]

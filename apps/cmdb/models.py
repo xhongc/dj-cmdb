@@ -9,8 +9,6 @@ class CISchema(models.Model):
     desc = models.CharField("描述", max_length=255, default='', null=True, blank=True)
     icon_url = models.CharField("图标", max_length=255, default='', null=True, blank=True)
 
-    field = models.ManyToManyField("CIField", related_name="schema", through='SchemaThroughField', symmetrical=False,
-                                   through_fields=('schema', 'field'))
     relation = models.ManyToManyField("self", related_name="relation_schema", through="SchemaThroughRelation",
                                       symmetrical=False, through_fields=('parent', 'child'))
     group = models.ForeignKey("CISchemaGroup", related_name="schema", on_delete=models.CASCADE, db_constraint=False,
@@ -41,18 +39,12 @@ class CIField(models.Model):
 
     value_type = models.CharField("值的类型", choices=VALUE_TYPE_MAP, blank=False, null=False, max_length=2)
     meta = models.JSONField("字段属性", default=dict)
+    schema = models.ForeignKey("CISchema", related_name="field", on_delete=models.CASCADE, db_constraint=False,
+                               null=False, blank=False, default='')
     objects = CIFieldManager()
 
     class Meta:
         verbose_name = "模型字段"
-
-
-class SchemaThroughField(models.Model):
-    schema = models.ForeignKey("CISchema", related_name="ci_field", on_delete=models.CASCADE, db_constraint=False)
-    field = models.ForeignKey("CIField", related_name="ci_schema", on_delete=models.CASCADE, db_constraint=False)
-
-    class Meta:
-        verbose_name = "模型和字段穿梭表"
 
 
 class Relation(models.Model):
@@ -220,24 +212,39 @@ MODEL_TYPE_MAP = {
     ValueTypeEnum.TIME: CITimeValue,
     ValueTypeEnum.JSON: CIJsonValue,
     ValueTypeEnum.CHAR: CICharValue,
+    ValueTypeEnum.ENUM: CICharValue,
 }
 
 
 class CIManager(models.Manager):
+    def items_exists(self, schema_id, keys):
+        return CIField.objects.filter(schema_id=schema_id, name__in=keys).count() == len(keys)
+
     def add(self, schema_id, ci_data: dict):
         """
         ci_data: {field:value...}
         """
         with transaction.atomic():
+            if not self.items_exists(schema_id, list(ci_data.keys())):
+                raise Exception("创建字段不属于/或不存在")
             ci = self.create(schema_id=schema_id)
             field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
             for field, value in ci_data.items():
-                try:
-                    value_mode = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
-                except KeyError as e:
-                    raise Exception(f"{str(e)}不存在")
+                value_mode = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
                 value_mode.objects.create(ci_id=ci.id, field_id=field_mapping[field]["id"], value=value)
         return ci
+
+    def modify(self, instance_id, schema_id, ci_data: dict):
+        with transaction.atomic():
+            if not self.items_exists(schema_id, list(ci_data.keys())):
+                raise Exception("创建字段不属于/或不存在")
+            ci_id = instance_id
+            field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
+            for field, value in ci_data.items():
+                value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
+                value_model.objects.update_or_create(ci_id=ci_id, field_id=field_mapping[field]["id"],
+                                                     defaults={"value": value})
+        return ci_id
 
 
 class CI(models.Model):
