@@ -7,7 +7,8 @@ from rest_framework.response import Response
 
 from apps.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup
 from apps.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
-    CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer
+    CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
+    ReadCISchemaSerializer
 from component.drf.viewsets import GenericViewSet
 
 
@@ -29,6 +30,8 @@ class CISchemaViewSet(mixins.ListModelMixin,
             return CISchemaRelationSerializer
         elif self.action == "create":
             return CISchemaSerializer
+        elif self.action == "retrieve":
+            return ReadCISchemaSerializer
         return CISchemaSerializer
 
     @action(methods=["post"], detail=False)

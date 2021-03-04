@@ -146,6 +146,7 @@ export default {
       })
     },
     handleSchemaDetail (schemaID) {
+      console.log('schemaID::', schemaID)
       this.$router.push({name: 'model_detail', params: {'schemaID': schemaID}})
     }
   }

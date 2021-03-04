@@ -1,4 +1,5 @@
 from django.db import models, transaction
+from django.db.models import Q
 
 from apps.cmdb.constants import VALUE_TYPE_MAP, ValueTypeEnum
 
@@ -27,9 +28,9 @@ class CISchemaGroup(models.Model):
 
 
 class CIFieldManager(models.Manager):
-    def get_field_mapping(self, names: list, display_values=None):
-        display_values = display_values or ("id", "name", "value_type")
-        qs = self.filter(name__in=names).values(*display_values)
+    def get_field_mapping(self, names: list):
+        display_values = ("id", "name", "value_type", "meta")
+        qs = self.filter(Q(name__in=names) | Q(meta__is_required=True)).values(*display_values)
         return {q["name"]: q for q in qs}
 
 
@@ -217,7 +218,8 @@ MODEL_TYPE_MAP = {
 
 
 class CIManager(models.Manager):
-    def items_exists(self, schema_id, keys):
+    @staticmethod
+    def items_exists(schema_id, keys):
         return CIField.objects.filter(schema_id=schema_id, name__in=keys).count() == len(keys)
 
     def add(self, schema_id, ci_data: dict):
@@ -225,14 +227,29 @@ class CIManager(models.Manager):
         ci_data: {field:value...}
         """
         with transaction.atomic():
+            # 验证是否字段都属于改模型
             if not self.items_exists(schema_id, list(ci_data.keys())):
                 raise Exception("创建字段不属于/或不存在")
             ci = self.create(schema_id=schema_id)
+            ci_id = ci.id
             field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
+            # 验证必填字段
+            if set(field_mapping.keys()) != set(ci_data.keys()):
+                miss_field = set(field_mapping.keys()) - set(ci_data.keys())
+                raise Exception(f"{miss_field}字段为必填")
             for field, value in ci_data.items():
-                value_mode = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
-                value_mode.objects.create(ci_id=ci.id, field_id=field_mapping[field]["id"], value=value)
+                value_model = self.verify_unique(field_mapping, field, value)
+                value_model.objects.create(ci_id=ci_id, field_id=field_mapping[field]["id"], value=value)
         return ci
+
+    @staticmethod
+    def verify_unique(field_mapping, field, value):
+        value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
+        meta_data = field_mapping[field]["meta"]
+        if meta_data.get("is_unique", False):
+            if value_model.objects.filter(field_id=field_mapping[field]["id"], value=value).exists():
+                raise Exception(f"<{field}>:{value} 已存在")
+        return value_model
 
     def modify(self, instance_id, schema_id, ci_data: dict):
         with transaction.atomic():
@@ -241,7 +258,7 @@ class CIManager(models.Manager):
             ci_id = instance_id
             field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
             for field, value in ci_data.items():
-                value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
+                value_model = self.verify_unique(field_mapping, field, value)
                 value_model.objects.update_or_create(ci_id=ci_id, field_id=field_mapping[field]["id"],
                                                      defaults={"value": value})
         return ci_id

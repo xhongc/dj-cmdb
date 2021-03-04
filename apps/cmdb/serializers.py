@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from apps.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup
-from apps.relation.serializers import RelationSerializer
+from apps.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
 
 
 class CIFieldSerializer(serializers.ModelSerializer):
@@ -20,7 +19,27 @@ class ListCIFieldSerializer(serializers.ModelSerializer):
 
 class CISchemaSerializer(serializers.ModelSerializer):
     field = CIFieldSerializer(many=True, read_only=True)
-    relation = RelationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CISchema
+        fields = "__all__"
+
+
+class SchemaThroughRelationSerializer(serializers.ModelSerializer):
+    relation = serializers.CharField(source="relation.alias")
+    source = serializers.CharField(source="parent.alias")
+    target = serializers.CharField(source="child.alias")
+
+    class Meta:
+        model = SchemaThroughRelation
+        fields = "__all__"
+
+
+class ReadCISchemaSerializer(serializers.ModelSerializer):
+    field = ListCIFieldSerializer(many=True, read_only=True)
+
+    relation = SchemaThroughRelationSerializer(many=True, source="_child")
+    relation_schema = SchemaThroughRelationSerializer(many=True, source="_parent")
 
     class Meta:
         model = CISchema

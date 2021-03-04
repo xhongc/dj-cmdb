@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'apps.cmdb',
-    'apps.relation'
+    'apps.relation',
+    'apps.subscription',
 ]
 
 MIDDLEWARE = [
@@ -110,15 +111,15 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Shanghai"
+LANGUAGE_CODE = "zh-hans"
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # 跨域允许的请求方式，可以使用默认值，默认的请求方式为:
 # from corsheaders.defaults import default_methods
