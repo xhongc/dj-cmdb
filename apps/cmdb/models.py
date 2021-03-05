@@ -14,6 +14,7 @@ class CISchema(models.Model):
                                       symmetrical=False, through_fields=('parent', 'child'))
     group = models.ForeignKey("CISchemaGroup", related_name="schema", on_delete=models.CASCADE, db_constraint=False,
                               null=True)
+    is_show = models.BooleanField("是否展示", default=False)
 
     class Meta:
         verbose_name = "模型"

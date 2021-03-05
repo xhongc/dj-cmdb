@@ -16,6 +16,12 @@ class ListCIFieldSerializer(serializers.ModelSerializer):
         model = CIField
         fields = "__all__"
 
+    def to_representation(self, instance):
+        ret = super(ListCIFieldSerializer, self).to_representation(instance)
+        ret["is_required"] = str(ret["meta"].get("is_required", False))
+        ret["is_unique"] = str(ret["meta"].get("is_unique", False))
+        return ret
+
 
 class CISchemaSerializer(serializers.ModelSerializer):
     field = CIFieldSerializer(many=True, read_only=True)

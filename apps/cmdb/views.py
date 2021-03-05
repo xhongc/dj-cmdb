@@ -5,6 +5,7 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from apps.cmdb.filters import CIFilter
 from apps.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup
 from apps.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
     CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
@@ -64,6 +65,7 @@ class CIFieldViewSet(mixins.ListModelMixin,
     create:创建字段
     """
     queryset = CIField.objects.all()
+    filter_class = CIFilter
 
     def get_serializer_class(self):
         if self.action == "list":
