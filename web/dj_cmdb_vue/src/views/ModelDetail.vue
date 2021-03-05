@@ -13,7 +13,7 @@
         <!-- <div style="margin-top: auto;margin-bottom: auto;">实例数量：</div> -->
       </div>
     </div>
-    <bk-tab :active.sync="active" type="unborder-card">
+    <bk-tab :active.sync="active" type="unborder-card" @tab-change="handleTab">
       <bk-tab-panel v-for="(panel, index) in panels" v-bind="panel" :key="index">
         <div v-if="active=='field'">
           <div>
@@ -37,6 +37,7 @@
           </div>
           <div class="wrapper flex">
             <div style="display: flex;width: 100%;flex-wrap: wrap;margin-top: 10px;margin-left: -5px;">
+              <bk-exception v-if="schemaData.field.length===0" class="exception-wrap-item exception-part" type="empty" scene="part"> </bk-exception>
               <div v-for="(field,index) in schemaData.field" :key="'field'+index" class="card-demo" style="width: 200px;height: 60px;"
                 @click="customSettings.isShow = true">
                 <bk-card title="卡片标题" :show-foot="false" :show-head="false" style="width: 100%;height: 100%;">
@@ -77,12 +78,12 @@
           </bk-table>
         </div>
         <div v-else>
-          <bk-table style="margin-top: 15px;" :data="relationData" :size="setting.size">
-            <bk-table-column v-for="field in setting.selectedFields" :key="field.id" :label="field.label" :prop="field.id">
+          <bk-table style="margin-top: 15px;" :data="fieldList" :size="metaSetting.size">
+            <bk-table-column v-for="field in metaSetting.selectedFields" :key="field.id" :label="field.label" :prop="field.id">
             </bk-table-column>
             <bk-table-column type="setting">
-              <bk-table-setting-content :fields="setting.fields" :selected="setting.selectedFields" :max="setting.max"
-                :size="setting.size" @setting-change="handleSettingChange">
+              <bk-table-setting-content :fields="metaSetting.fields" :selected="metaSetting.selectedFields" :max="metaSetting.max"
+                :size="metaSetting.size" @setting-change="handleMetaSettingChange">
               </bk-table-setting-content>
             </bk-table-column>
           </bk-table>
@@ -119,6 +120,25 @@ export default {
       id: 'target',
       label: '目标模型'
     }]
+    const metaFields = [{
+      id: 'alias',
+      label: '字段名称'
+    }, {
+      id: 'is_unique',
+      label: '是否唯一'
+    },
+    {
+      id: 'is_required',
+      label: '是否必填'
+    },
+    {
+      id: 'value_type',
+      label: '字段类型'
+    }, {
+      id: 'name',
+      label: '字段标识'
+    }
+    ]
     return {
       panels: [{
         name: 'field',
@@ -189,7 +209,7 @@ export default {
         schema: this.$route.params.schemaID
       },
       fieldList: [],
-      schemaData: {},
+      schemaData: {field: []},
       relationData: [],
       setting: {
         max: 3,
@@ -197,7 +217,13 @@ export default {
         selectedFields: fields.slice(0, 3),
         size: 'small'
       },
-      basicLoading: false
+      basicLoading: false,
+      metaSetting: {
+        max: 3,
+        fields: metaFields,
+        selectedFields: metaFields.slice(0, 3),
+        size: 'small'
+      }
     }
   },
   methods: {
@@ -206,9 +232,10 @@ export default {
         name: 'model'
       })
     },
-    getCiField () {
-      ciField().then((response) => {
+    getCiField (params) {
+      ciField(params).then((response) => {
         this.fieldList = response.data.data
+        console.log(this.fieldList)
       })
     },
     readSchema () {
@@ -223,7 +250,6 @@ export default {
       })
     },
     postCreateField () {
-      console.log(this.postFieldData)
       createCiField(this.postFieldData).then((response) => {
         this.$bkMessage({
           theme: 'success',
@@ -246,6 +272,18 @@ export default {
     }) {
       this.setting.size = size
       this.setting.selectedFields = fields
+    },
+    handleMetaSettingChange ({
+      fields,
+      size
+    }) {
+      this.metaSetting.size = size
+      this.metaSetting.selectedFields = fields
+    },
+    handleTab (name) {
+      if (name === 'unique') {
+        this.getCiField({meta: '1', schema_id: this.pk})
+      }
     }
   }
 }

@@ -141,20 +141,27 @@ export default {
       header: {
         list: [{
           name: '业务',
-          id: 1,
+          id: 0,
           show: true
         },
         {
           name: '资源',
-          id: 2,
+          id: 1,
+          navActive: '资源',
           show: true,
-          toUrl: 'resource'
+          toUrl: 'resource',
+          childSlider: [{
+            name: '资源',
+            icon: 'icon-apps',
+            url: 'model'
+          }
+          ]
         },
         {
           name: '模型',
-          id: 3,
+          id: 2,
           show: true,
-          navActive: 2,
+          navActive: '模型管理',
           toUrl: 'model',
           childSlider: [{
             name: '模型管理',
@@ -175,7 +182,7 @@ export default {
         },
         {
           name: '分析表',
-          id: 4,
+          id: 3,
           show: true
         }
         ],
@@ -227,6 +234,8 @@ export default {
       return true
     },
     handleChangeNav (item) {
+      this.header.active = item.id
+      this.nav.id = item.navActive
       this.$router.push({
         'name': item.toUrl
       })

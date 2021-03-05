@@ -12,7 +12,7 @@ export const CreateSChemaGroup = params => {
   return axios.post(`${host}/ci_schema_group/`, params)
 }
 export const ciField = params => {
-  return axios.get(`${host}/ci_field/`, params)
+  return axios.get(`${host}/ci_field/`, {params: params})
 }
 export const createCiField = params => {
   return axios.post(`${host}/ci_field/`, params)
