@@ -13,6 +13,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bk-magic-vue": "^2.2.14",
+    "less": "^4.1.1",
+    "less-loader": "^8.0.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1"
   },

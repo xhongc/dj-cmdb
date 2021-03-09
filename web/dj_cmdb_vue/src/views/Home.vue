@@ -73,7 +73,7 @@
         <bk-navigation-menu ref="menu" @select="handleSelect" :default-active="nav.id" :before-nav-change="beforeNavChange"
           :toggle-active="nav.toggle">
           <bk-navigation-menu-item v-for="item in nav.list" :key="item.name" :has-child="item.children && !!item.children.length"
-            :group="item.group" :icon="item.icon" :disabled="item.disabled" :url="item.url" :id="item.name">
+            :group="item.group" :icon="item.icon" :disabled="item.disabled" :url="item.url" :id="item.name" :fields="item.fields">
             <span>{{item.name}}</span>
             <div slot="child">
               <bk-navigation-menu-item :key="child.name" v-for="child in item.children" :id="child.name" :disabled="child.disabled"
@@ -85,7 +85,7 @@
         </bk-navigation-menu>
       </template>
       <div class="monitor-navigation-content">
-        <router-view></router-view>
+        <router-view v-if="isRouterView"></router-view>
       </div>
     </bk-navigation>
   </div>
@@ -101,6 +101,9 @@ import {
   bkPopover,
   bkButton
 } from 'bk-magic-vue'
+import {
+  getCiSChema
+} from '@/api/api'
 export default {
   name: 'monitor-navigation',
   components: {
@@ -112,8 +115,12 @@ export default {
     bkPopover,
     bkButton
   },
+  mounted () {
+    this.getCISchemaFuc()
+  },
   data () {
     return {
+      isRouterView: true,
       navActive: 1,
       navMap: [{
         nav: 'left-right',
@@ -147,15 +154,14 @@ export default {
         {
           name: '资源',
           id: 1,
-          navActive: '资源',
+          navActive: '资源目录',
           show: true,
           toUrl: 'resource',
           childSlider: [{
-            name: '资源',
+            name: '资源目录',
             icon: 'icon-apps',
-            url: 'model'
-          }
-          ]
+            url: 'resource'
+          }]
         },
         {
           name: '模型',
@@ -224,10 +230,23 @@ export default {
   methods: {
     handleSelect (id, item) {
       this.nav.id = id
-      console.info(`你选择了${id}`)
-      this.$router.push({
-        'name': item.url
-      })
+      var urlParams = item.url.split('#')
+      console.info(`你选择了${id}`, item)
+      if (urlParams[1]) {
+        this.isRouterView = false
+        this.$nextTick(function () {
+          this.isRouterView = true
+        })
+        // this.$router.push({path: `/${urlParams[0]}/${urlParams[1]}`, params: {'name': item.id}})
+        this.$router.push({
+          'name': urlParams[0],
+          'params': {'schemaID': urlParams[1], 'name': item.id, 'fields': item.fields}
+        })
+      } else {
+        this.$router.push({
+          'name': urlParams[0]
+        })
+      }
     },
     beforeNavChange (newId, oldId) {
       console.info(newId, oldId)
@@ -239,7 +258,23 @@ export default {
       this.$router.push({
         'name': item.toUrl
       })
+      console.log('childSlider', item.childSlider)
       this.nav.list = item.childSlider
+    },
+    getCISchemaFuc () {
+      getCiSChema().then((response) => {
+        var index
+        for (index in response.data.data) {
+          this.header.list[1].childSlider.push({
+            name: response.data.data[index].alias,
+            icon: 'icon-apps',
+            url: 'resources#' + response.data.data[index].id,
+            fields: response.data.data[index].field
+          })
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   }
 }

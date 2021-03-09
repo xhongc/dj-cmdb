@@ -7,9 +7,11 @@ import bkMagic from 'bk-magic-vue'
 import 'bk-magic-vue/dist/bk-magic-vue.min.css'
 import './axios/'
 import Axios from 'axios'
+import less from 'less'
 
 Vue.config.productionTip = false
 Vue.use(bkMagic)
+Vue.use(less)
 
 /* eslint-disable no-new */
 new Vue({

@@ -6,6 +6,7 @@ import resource from '@/views/Resource.vue'
 import relation from '@/views/Relation.vue'
 import topo from '@/views/Topo.vue'
 import modelDetail from '@/views/ModelDetail.vue'
+import resources from '@/views/Resources.vue'
 Vue.use(Router)
 
 const includPush = Router.prototype.push
@@ -45,6 +46,11 @@ export default new Router({
         path: '/model_detail/',
         name: 'model_detail',
         component: modelDetail,
+      },
+      {
+        path: '/resources/:schemaID',
+        name: 'resources',
+        component: resources,
       }
     ]
   }]

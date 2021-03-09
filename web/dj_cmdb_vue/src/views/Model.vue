@@ -51,7 +51,7 @@
     <bk-collapse v-model="activeName">
       <div v-for="(group,index) in groupList" :key="'group'+index">
         <bk-collapse-item :name="group.id" class="ci-group">
-          {{group.alias}}
+          {{group.alias}}<div style="color: lightgray;"> ({{group.schema.length}})</div>
           <div slot="content" class="f13">
             <div style="display: flex;width: 100%;flex-wrap: wrap;">
               <div v-for="(ci,index) in group.schema" :key="'ci'+index" class="card-demo" @click="handleSchemaDetail(ci.id)">
