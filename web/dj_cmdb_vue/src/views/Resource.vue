@@ -21,6 +21,7 @@ import {
 } from '@/api/api'
 export default {
   name: 'resource',
+  inject: ['getCISchemaFuc'],
   mounted () {
     this.getCiSChemaGroup()
   },

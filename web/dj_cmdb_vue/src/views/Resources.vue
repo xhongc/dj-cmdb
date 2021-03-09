@@ -59,7 +59,6 @@ export default {
       getCI(this.pk, {page: this.pagingConfigTwo.current, page_size: this.pagingConfigTwo.limit}).then((res) => {
         this.ciData = res.data.data.item
         this.pagingConfigTwo.count = res.data.data.count
-        console.log(this.ciData)
       }).catch((err) => {
         console.log(err)
       })
@@ -72,7 +71,6 @@ export default {
       this.setting.selectedFields = fields
     },
     changePage (page) {
-      console.log(page)
       this.pagingConfigTwo.current = page
       this.getCIData()
     },
@@ -84,7 +82,7 @@ export default {
   mounted () {
     if (this.fieldList.length !== 0) {
       this.setting.fields = this.fieldList
-      this.setting.selectedFields = this.fieldList
+      this.setting.selectedFields = this.fieldList.slice(0, 4)
     }
     this.getCIData()
   },

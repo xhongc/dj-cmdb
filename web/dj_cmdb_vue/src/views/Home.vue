@@ -69,18 +69,12 @@
           </bk-popover>
         </div>
       </template>
-      <template slot="menu">
+      <template slot="menu" v-if="isMenu">
         <bk-navigation-menu ref="menu" @select="handleSelect" :default-active="nav.id" :before-nav-change="beforeNavChange"
           :toggle-active="nav.toggle">
           <bk-navigation-menu-item v-for="item in nav.list" :key="item.name" :has-child="item.children && !!item.children.length"
             :group="item.group" :icon="item.icon" :disabled="item.disabled" :url="item.url" :id="item.name" :fields="item.fields">
             <span>{{item.name}}</span>
-            <div slot="child">
-              <bk-navigation-menu-item :key="child.name" v-for="child in item.children" :id="child.name" :disabled="child.disabled"
-                :icon="child.icon" :default-active="child.active">
-                <span>{{child.name}}</span>
-              </bk-navigation-menu-item>
-            </div>
           </bk-navigation-menu-item>
         </bk-navigation-menu>
       </template>
@@ -116,12 +110,18 @@ export default {
     bkButton
   },
   mounted () {
-    this.getCISchemaFuc()
+    // this.getCISchemaFuc()
   },
   data () {
     return {
       isRouterView: true,
+      isMenu: false,
       navActive: 1,
+      resourceMenuSlider: {
+        name: '资源目录',
+        icon: 'icon-apps',
+        url: 'resource'
+      },
       navMap: [{
         nav: 'left-right',
         needMenu: true,
@@ -228,10 +228,11 @@ export default {
     }
   },
   methods: {
+    // 切换侧边栏
     handleSelect (id, item) {
       this.nav.id = id
       var urlParams = item.url.split('#')
-      console.info(`你选择了${id}`, item)
+      console.info(`你选择了${id}`, item.fields)
       if (urlParams[1]) {
         this.isRouterView = false
         this.$nextTick(function () {
@@ -249,33 +250,46 @@ export default {
       }
     },
     beforeNavChange (newId, oldId) {
-      console.info(newId, oldId)
       return true
     },
+    // 切换上边栏
     handleChangeNav (item) {
       this.header.active = item.id
       this.nav.id = item.navActive
+      console.log('asd', item)
+      if (item.id === 1) {
+        this.getCISchemaFuc()
+      } else {
+        this.nav.list = item.childSlider
+      }
       this.$router.push({
         'name': item.toUrl
       })
-      console.log('childSlider', item.childSlider)
-      this.nav.list = item.childSlider
     },
+    // 获取动态侧边栏模型
     getCISchemaFuc () {
       getCiSChema().then((response) => {
         var index
+        var childList = []
+        childList.push(this.resourceMenuSlider)
         for (index in response.data.data) {
-          this.header.list[1].childSlider.push({
+          childList.push({
             name: response.data.data[index].alias,
             icon: 'icon-apps',
             url: 'resources#' + response.data.data[index].id,
             fields: response.data.data[index].field
           })
         }
+        this.header.list[1].childSlider = childList
+        this.nav.list = childList
+        this.isMenu = true
       }).catch((error) => {
         console.log(error)
       })
     }
+  },
+  provide () {
+    return {getCISchemaFuc: this.getCISchemaFuc}
   }
 }
 </script>
