@@ -38,9 +38,10 @@ INSTALLED_APPS = [
     'cachalot',
     'rest_framework',
     'drf_yasg',
-    'apps.cmdb',
-    'apps.relation',
-    'apps.subscription',
+    'applications',
+    'applications.cmdb',
+    'applications.relation',
+    'applications.subscription',
 ]
 
 MIDDLEWARE = [

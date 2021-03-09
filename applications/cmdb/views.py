@@ -5,9 +5,9 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.cmdb.filters import CIFilter
-from apps.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup
-from apps.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
+from applications.cmdb.filters import CIFilter
+from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup
+from applications.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
     CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
     ReadCISchemaSerializer
 from component.drf.viewsets import GenericViewSet
@@ -90,11 +90,11 @@ class CIViewSet(mixins.RetrieveModelMixin,
         return CISerializer
 
     def retrieve(self, request, *args, **kwargs):
-        page = request.data.get("page", 1)
-        page_size = request.data.get("page_size", 10)
+        page = int(request.query_params.get("page", 1))
+        page_size = int(request.query_params.get("page_size", 10))
         offset = (page - 1) * page_size
         # 模型条目ids
-        ci_ids = self.get_queryset().filter(**kwargs).values_list('id', flat=True)[offset:page_size]
+        ci_ids = self.get_queryset().filter(**kwargs).values_list('id', flat=True)[offset:page_size*page]
         ci_count = self.get_queryset().filter(**kwargs).count()
         # union所有值model
         none_queryset = CI.objects.none()

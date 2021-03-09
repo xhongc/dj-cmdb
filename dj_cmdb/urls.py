@@ -6,8 +6,8 @@ from drf_yasg.views import get_schema_view
 
 from rest_framework.routers import DefaultRouter
 
-from apps.cmdb.views import CISchemaViewSet, CIFieldViewSet, CIViewSet, CISchemaGroupViewSet
-from apps.relation.views import RelationViewSet
+from applications.cmdb.views import CISchemaViewSet, CIFieldViewSet, CIViewSet, CISchemaGroupViewSet
+from applications.relation.views import RelationViewSet
 
 router = DefaultRouter()
 router.register(r"ci_schema", CISchemaViewSet, basename="ci_schema")

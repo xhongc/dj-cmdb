@@ -1,7 +1,7 @@
 from rest_framework import mixins
 
-from apps.cmdb.models import Relation
-from apps.relation.serializers import RelationSerializer
+from applications.cmdb.models import Relation
+from applications.relation.serializers import RelationSerializer
 from component.drf.viewsets import GenericViewSet
 
 

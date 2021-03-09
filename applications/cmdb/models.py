@@ -1,7 +1,7 @@
 from django.db import models, transaction
 from django.db.models import Q
 
-from apps.cmdb.constants import VALUE_TYPE_MAP, ValueTypeEnum
+from applications.cmdb.constants import VALUE_TYPE_MAP, ValueTypeEnum
 
 
 class CISchema(models.Model):

@@ -1,1 +1,1 @@
-default_app_config = 'apps.cmdb.apps.CmdbConfig'
+default_app_config = 'applications.cmdb.apps.CmdbConfig'

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
+from applications.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
 
 
 class CIFieldSerializer(serializers.ModelSerializer):
