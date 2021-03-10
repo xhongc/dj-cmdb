@@ -12,7 +12,7 @@
         <div v-for="(schema,index) in schemaGroup.schema" :key="'schema'+index" class="field">
           <bk-icon type="pc" class="item-icon"/>
           <div class="item-content">{{schema.alias}}</div>
-          <bk-icon type="smile" class="item-fav" />
+          <bk-icon :type="schema.is_show?'heart-shape':'heart'" :class="schema.is_show?'item-fav-display':'item-fav'" @click="handleFav(schema.id,schema.is_show)"/>
         </div>
       </div>
 
@@ -25,7 +25,7 @@
 
 <script>
 import {
-  ciSChemaGroup
+  ciSChemaGroup, patchCiSChema
 } from '@/api/api'
 export default {
   name: 'resource',
@@ -46,6 +46,22 @@ export default {
       }).catch((error) => {
         console.log('2', error)
       })
+    },
+    handleFav (id, isShow) {
+      console.log('item', id, isShow)
+      patchCiSChema(id, {is_show: !isShow}).then((response) => {
+        this.$bkMessage({
+          theme: 'success',
+          message: isShow ? '取消导航成功' : '添加导航成功'
+        })
+        this.getCiSChemaGroup()
+        this.getCISchemaFuc()
+      }).catch((error) => {
+        this.$bkMessage({
+          theme: 'error',
+          message: error.message
+        })
+      })
     }
   }
 }
@@ -57,11 +73,17 @@ export default {
     color: #3A84FF;
   }
   .item-fav {
-    margin-left: 10px;
+    margin: auto auto;
     display: none;
+    font-size: 14px !important;
+    line-height: 14px;
   }
-  .item-fav:hover {
-    color: red;
+  .item-fav-display {
+    margin: auto auto;
+    display: block;
+    font-size: 14px !important;
+    line-height: 14px;
+    color: #FFB400;
   }
   .field:hover {
     color: lightblue;

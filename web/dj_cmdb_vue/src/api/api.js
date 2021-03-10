@@ -8,8 +8,13 @@ export const ciSChemaGroup = params => {
 export const ciSChema = params => {
   return axios.post(`${host}/ci_schema/`, params)
 }
+export const patchCiSChema = (pk, params) => {
+  return axios.patch(`${host}/ci_schema/${pk}/`, params)
+}
 export const getCiSChema = params => {
-  return axios.get(`${host}/ci_schema/`, params)
+  return axios.get(`${host}/ci_schema/`, {
+    params: params
+  })
 }
 export const CreateSChemaGroup = params => {
   return axios.post(`${host}/ci_schema_group/`, params)
@@ -35,4 +40,7 @@ export const getCI = (pk, params) => {
   return axios.get(`${host}/ci/${pk}`, {
     params: params
   })
+}
+export const createCi = params => {
+  return axios.post(`${host}/ci/`, params)
 }

@@ -3,9 +3,23 @@
     <div class="sub-title">{{this.$route.params.name}}</div>
     <bk-divider></bk-divider>
     <div>
-      <bk-button theme="primary">新建</bk-button>
+      <bk-button theme="primary" @click="customSettings.isShow=true">新建</bk-button>
       <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
     </div>
+    <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true" :width="customSettings.width">
+      <div slot="header">{{ customSettings.title }}</div>
+      <div class="p20" slot="content">
+        <bk-form :label-width="200" form-type="vertical" class="form">
+          <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
+            <bk-input v-model="formData[field.id]"></bk-input>
+          </bk-form-item>
+          <bk-form-item class="mt20" style="flex-basis: 100%;">
+            <bk-button ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
+            <bk-button ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="customSettings.isShow=false">取消</bk-button>
+          </bk-form-item>
+        </bk-form>
+      </div>
+    </bk-sideslider>
     <bk-table style="margin-top: 15px;" :data="ciData" :size="setting.size">
       <bk-table-column v-for="field in setting.selectedFields" :key="field.id" :label="field.label" :prop="field.id">
       </bk-table-column>
@@ -17,14 +31,15 @@
     </bk-table>
     <bk-pagination size="small" :current.sync="pagingConfigTwo.current" :limit="pagingConfigTwo.limit" :count="pagingConfigTwo.count"
       :location="pagingConfigTwo.location" :align="pagingConfigTwo.align" :show-limit="pagingConfigTwo.showLimit"
-      :limit-list="pagingConfigTwo.limitList" :show-total-count="pagingConfigTwo.totalCount" @change="changePage" @limit-change="changeLimit">
+      :limit-list="pagingConfigTwo.limitList" :show-total-count="pagingConfigTwo.totalCount" @change="changePage"
+      @limit-change="changeLimit">
     </bk-pagination>
   </div>
 </template>
 
 <script>
 import {
-  getCI
+  getCI, createCi
 } from '@/api/api'
 export default {
   name: 'resources',
@@ -51,12 +66,21 @@ export default {
         showLimit: true,
         limitList: [10, 20, 50],
         totalCount: true
-      }
+      },
+      customSettings: {
+        isShow: false,
+        title: '创建' + this.$route.params.name,
+        width: 600
+      },
+      formData: {}
     }
   },
   methods: {
     getCIData () {
-      getCI(this.pk, {page: this.pagingConfigTwo.current, page_size: this.pagingConfigTwo.limit}).then((res) => {
+      getCI(this.pk, {
+        page: this.pagingConfigTwo.current,
+        page_size: this.pagingConfigTwo.limit
+      }).then((res) => {
         this.ciData = res.data.data.item
         this.pagingConfigTwo.count = res.data.data.count
       }).catch((err) => {
@@ -77,7 +101,24 @@ export default {
     changeLimit (limit) {
       this.pagingConfigTwo.limit = limit
       this.getCIData()
+    },
+    submitData () {
+      alert(JSON.stringify(this.formData))
+      createCi({schema_id: this.pk, field_value: this.formData}).then((res) => {
+        this.$bkMessage({
+          theme: 'success',
+          message: '创建成功'
+        })
+        this.customSettings.isShow = false
+        this.getCIData()
+      }).catch((err) => {
+        this.$bkMessage({
+          theme: 'error',
+          message: err.message
+        })
+      })
     }
+
   },
   mounted () {
     if (this.fieldList.length !== 0) {
@@ -108,5 +149,15 @@ export default {
     margin-left: 12px;
     margin: 14px;
     height: 23px;
+  }
+  .form {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .field-form {
+    width: 42%;
+    margin-right: 30px;
+    margin-top: 8px;
   }
 </style>

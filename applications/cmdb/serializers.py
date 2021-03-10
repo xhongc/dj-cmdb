@@ -55,7 +55,7 @@ class ReadCISchemaSerializer(serializers.ModelSerializer):
 class SimpleCISchemaSerializer(serializers.ModelSerializer):
     class Meta:
         model = CISchema
-        fields = ("id", "name", "alias")
+        fields = ("id", "name", "alias", "is_show")
 
 
 class CISchemaGroupSerializer(serializers.ModelSerializer):

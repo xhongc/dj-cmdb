@@ -24,7 +24,7 @@ class CISchemaViewSet(mixins.ListModelMixin,
     create:新增模型
     """
     queryset = CISchema.objects.all()
-    filterset_fields = {"name": ("exact",), "id": ("exact",)}
+    filterset_fields = {"name": ("exact",), "id": ("exact",), "is_show": ("exact",)}
 
     def get_serializer_class(self):
         if self.action == "add_relation":
@@ -81,7 +81,7 @@ class CIViewSet(mixins.RetrieveModelMixin,
     retrieve:根据模型id查每条配置项数据
     create:新增配置项
     """
-    queryset = CI.objects.all()
+    queryset = CI.objects.all().order_by('-id')
     lookup_field = "schema_id"
 
     def get_serializer_class(self):
@@ -94,7 +94,7 @@ class CIViewSet(mixins.RetrieveModelMixin,
         page_size = int(request.query_params.get("page_size", 10))
         offset = (page - 1) * page_size
         # 模型条目ids
-        ci_ids = self.get_queryset().filter(**kwargs).values_list('id', flat=True)[offset:page_size*page]
+        ci_ids = self.get_queryset().filter(**kwargs).values_list('id', flat=True)[offset:page_size * page]
         ci_count = self.get_queryset().filter(**kwargs).count()
         # union所有值model
         none_queryset = CI.objects.none()
@@ -102,7 +102,7 @@ class CIViewSet(mixins.RetrieveModelMixin,
         for value_model in MODEL_TYPE_MAP.values():
             queryset.append(
                 value_model.objects.filter(ci_id__in=list(ci_ids)).values_list("ci_id", "field__name", "value"))
-        union_query = none_queryset.union(*queryset)
+        union_query = none_queryset.union(*queryset).order_by('-ci_id')
         # 根据ci—id聚合字段-值
         ci_dict = defaultdict(dict)
         for ci_id, field_name, value in union_query:

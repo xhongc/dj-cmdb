@@ -268,7 +268,7 @@ export default {
     },
     // 获取动态侧边栏模型
     getCISchemaFuc () {
-      getCiSChema().then((response) => {
+      getCiSChema({is_show: 1}).then((response) => {
         var index
         var childList = []
         childList.push(this.resourceMenuSlider)
