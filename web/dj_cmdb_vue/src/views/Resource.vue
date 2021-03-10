@@ -11,7 +11,7 @@
         <bk-divider></bk-divider>
         <div v-for="(schema,index) in schemaGroup.schema" :key="'schema'+index" class="field">
           <bk-icon type="pc" class="item-icon"/>
-          <div class="item-content">{{schema.alias}}</div>
+          <div class="item-content" @click="redirctResource(schema)">{{schema.alias}}</div>
           <bk-icon :type="schema.is_show?'heart-shape':'heart'" :class="schema.is_show?'item-fav-display':'item-fav'" @click="handleFav(schema.id,schema.is_show)"/>
         </div>
       </div>
@@ -61,6 +61,12 @@ export default {
           theme: 'error',
           message: error.message
         })
+      })
+    },
+    redirctResource (schema) {
+      this.$router.push({
+        'name': 'resources',
+        'params': {'schemaID': schema.id, 'name': schema.alias, 'fields': schema.field}
       })
     }
   }

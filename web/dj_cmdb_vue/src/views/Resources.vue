@@ -10,12 +10,13 @@
       <div slot="header">{{ customSettings.title }}</div>
       <div class="p20" slot="content">
         <bk-form :label-width="200" form-type="vertical" class="form">
+          <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part"> </bk-exception>
           <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
             <bk-input v-model="formData[field.id]"></bk-input>
           </bk-form-item>
           <bk-form-item class="mt20" style="flex-basis: 100%;">
-            <bk-button ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
-            <bk-button ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="customSettings.isShow=false">取消</bk-button>
+            <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
+            <bk-button  v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="customSettings.isShow=false">取消</bk-button>
           </bk-form-item>
         </bk-form>
       </div>

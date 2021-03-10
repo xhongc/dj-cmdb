@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+
 from django.db import models, transaction
 from django.db.models import Q
 
@@ -29,9 +32,9 @@ class CISchemaGroup(models.Model):
 
 
 class CIFieldManager(models.Manager):
-    def get_field_mapping(self, names: list):
-        display_values = ("id", "name", "value_type", "meta")
-        qs = self.filter(Q(name__in=names) | Q(meta__is_required=True)).values(*display_values)
+    def get_field_mapping(self, names: list, schema_id):
+        display_values = ("id", "name", "value_type", "meta", "alias")
+        qs = self.filter(Q(name__in=names) | Q(meta__is_required=True, schema_id=schema_id)).values(*display_values)
         return {q["name"]: q for q in qs}
 
 
@@ -216,6 +219,17 @@ MODEL_TYPE_MAP = {
     ValueTypeEnum.CHAR: CICharValue,
     ValueTypeEnum.ENUM: CICharValue,
 }
+VALUE_VALIDATE = {
+    ValueTypeEnum.INT: int,
+    ValueTypeEnum.FLOAT: float,
+    ValueTypeEnum.TEXT: str,
+    ValueTypeEnum.DATETIME: lambda x: datetime.strptime(x, "%Y-%m-%d %H:%M:%S"),
+    ValueTypeEnum.DATE: lambda x: datetime.strptime(x, "%Y-%m-%d"),
+    ValueTypeEnum.TIME: lambda x: datetime.strptime(x, "%H:%M:%S"),
+    ValueTypeEnum.JSON: json.loads,
+    ValueTypeEnum.CHAR: str,
+    ValueTypeEnum.ENUM: str,
+}
 
 
 class CIManager(models.Manager):
@@ -233,35 +247,46 @@ class CIManager(models.Manager):
                 raise Exception("创建字段不属于/或不存在")
             ci = self.create(schema_id=schema_id)
             ci_id = ci.id
-            field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
+            field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()), schema_id=schema_id)
             # 验证必填字段
             if set(field_mapping.keys()) != set(ci_data.keys()):
                 miss_field = set(field_mapping.keys()) - set(ci_data.keys())
                 raise Exception(f"{miss_field}字段为必填")
             for field, value in ci_data.items():
-                value_model = self.verify_unique(field_mapping, field, value)
-                value_model.objects.create(ci_id=ci_id, field_id=field_mapping[field]["id"], value=value)
+                if not value:
+                    continue
+                value_model, validated_value = self.verify_fields(field_mapping, field, value)
+                value_model.objects.create(ci_id=ci_id, field_id=field_mapping[field]["id"], value=validated_value)
         return ci
 
     @staticmethod
-    def verify_unique(field_mapping, field, value):
+    def verify_fields(field_mapping, field, value):
+        """必須验证必填"""
         value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
+        value_validate = VALUE_VALIDATE[field_mapping[field]["value_type"]]
+        # 验证值是否是预设类型
+        try:
+            validated_value = value_validate(value)
+        except Exception as e:
+            field_alias = field_mapping[field]['alias']
+            raise Exception(f"<{field_alias}>:{value} 类型不符合：{e}")
         meta_data = field_mapping[field]["meta"]
         if meta_data.get("is_unique", False):
             if value_model.objects.filter(field_id=field_mapping[field]["id"], value=value).exists():
-                raise Exception(f"<{field}>:{value} 已存在")
-        return value_model
+                field_alias = field_mapping[field]['alias']
+                raise Exception(f"<{field_alias}>:{value} 已存在")
+        return value_model, validated_value
 
     def modify(self, instance_id, schema_id, ci_data: dict):
         with transaction.atomic():
             if not self.items_exists(schema_id, list(ci_data.keys())):
                 raise Exception("创建字段不属于/或不存在")
             ci_id = instance_id
-            field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()))
+            field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()), schema_id=schema_id)
             for field, value in ci_data.items():
-                value_model = self.verify_unique(field_mapping, field, value)
+                value_model, validated_value = self.verify_fields(field_mapping, field, value)
                 value_model.objects.update_or_create(ci_id=ci_id, field_id=field_mapping[field]["id"],
-                                                     defaults={"value": value})
+                                                     defaults={"value": validated_value})
         return ci_id
 
 

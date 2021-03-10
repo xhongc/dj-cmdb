@@ -53,9 +53,11 @@ class ReadCISchemaSerializer(serializers.ModelSerializer):
 
 
 class SimpleCISchemaSerializer(serializers.ModelSerializer):
+    field = ListCIFieldSerializer(many=True, read_only=True)
+
     class Meta:
         model = CISchema
-        fields = ("id", "name", "alias", "is_show")
+        fields = ("id", "name", "alias", "is_show", "field")
 
 
 class CISchemaGroupSerializer(serializers.ModelSerializer):
@@ -141,7 +143,10 @@ class CIUpdateSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        pass
+        try:
+            return CI.objects.modify(validated_data["id"], validated_data["schema_id"], validated_data["field_value"])
+        except Exception as e:
+            raise serializers.ValidationError(f'参数错误{str(e)}')
 
     def update(self, instance, validated_data):
         pass
