@@ -10,7 +10,9 @@
       <div slot="header">{{ customSettings.title }}</div>
       <div class="p20" slot="content">
         <bk-form :label-width="200" form-type="vertical" class="form">
-          <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part"> </bk-exception>
+          <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part">
+          <router-link :to="{ name: 'model_detail', params: { schemaID: this.pk }}">请先创建模型字段</router-link>
+          </bk-exception>
           <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
             <bk-input v-model="formData[field.id]"></bk-input>
           </bk-form-item>
