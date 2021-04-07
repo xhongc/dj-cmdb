@@ -44,3 +44,6 @@ export const getCI = (pk, params) => {
 export const createCi = params => {
   return axios.post(`${host}/ci/`, params)
 }
+export const updateCiField = (pk, params) => {
+  return axios.put(`${host}/ci_field/${pk}/`, params)
+}

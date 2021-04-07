@@ -10,7 +10,7 @@ class CIFieldSerializer(serializers.ModelSerializer):
 
 
 class ListCIFieldSerializer(serializers.ModelSerializer):
-    value_type = serializers.CharField(source="get_value_type_display")
+    # value_type = serializers.CharField(source="get_value_type_display")
 
     class Meta:
         model = CIField
@@ -108,12 +108,34 @@ class CISerializer(serializers.Serializer):
 
     def validate(self, attrs):
         schema = CISchema.objects.get(id=attrs["schema_id"])
+        # 验证传入的字段是否都是该模型的
         args_fields = set(attrs["field_value"].keys())
         all_fields = set(schema.field.values_list("name", flat=True))
         extra_fields = args_fields - all_fields
-        if extra_fields:
+        if extra_fields == {"ci_id"}:
+            self.instance = True
+            return attrs
+        elif extra_fields:
             raise serializers.ValidationError(f"{extra_fields}字段不属于该模型")
         return attrs
+
+    def save(self, **kwargs):
+        validated_data = {**self.validated_data, **kwargs}
+
+        if self.instance is not None:
+            instance_id = validated_data["field_value"].pop("ci_id")
+            self.instance = self.update(instance_id, validated_data)
+            assert self.instance is not None, (
+                '`update()` did not return an object instance.'
+            )
+            self._data = {"message": "修改成功"}
+        else:
+            self.instance = self.create(validated_data)
+            assert self.instance is not None, (
+                '`create()` did not return an object instance.'
+            )
+
+        return self.instance
 
     def create(self, validated_data):
         try:
@@ -122,7 +144,8 @@ class CISerializer(serializers.Serializer):
             raise serializers.ValidationError(f'参数错误{str(e)}')
 
     def update(self, instance, validated_data):
-        pass
+        return CI.objects.modify(instance_id=instance, schema_id=validated_data["schema_id"],
+                                 ci_data=validated_data["field_value"])
 
 
 class CIUpdateSerializer(serializers.Serializer):

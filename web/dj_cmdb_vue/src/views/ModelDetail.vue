@@ -18,32 +18,10 @@
         <div v-if="active=='field'">
           <div>
             <bk-button theme="primary" @click="createFieldSettings.visible = true">新建属性</bk-button>
-            <!-- <bk-dialog v-model="createFieldSettings.visible" title="新建属性" :header-position="createFieldSettings.headerPosition"
-              :width="createFieldSettings.width" @confirm="postCreateField">
-              <div>唯一标识</div>
-              <bk-input :placeholder="'请输入唯一标识'" style="margin-bottom: 15px;" v-model="postFieldData.name">
-              </bk-input>
-              <div>属性名称</div>
-              <bk-input :placeholder="'请输入属性名称'" style="margin-bottom: 15px;" v-model="postFieldData.alias">
-              </bk-input>
-              <div>字段类型</div>
-              <bk-select :disabled="false" :search-with-pinyin="true" v-model="postFieldData.value_type" style="width: 250px;"
-                ext-cls="select-custom" ext-popover-cls="select-popover-custom" searchable>
-                <bk-option v-for="item in valueTypeMap" :key="item.type_id" :id="item.type_id" :name="item.name">
-                </bk-option>
-              </bk-select>
-            </bk-dialog> -->
-
-            <bk-sideslider :is-show.sync="createFieldSettings.visible" :quick-close="true" :width="createFieldSettings.width">
-              <div slot="header">123</div>
+            <bk-sideslider :is-show.sync="createFieldSettings.visible" :quick-close="true" :width="createFieldSettings.width" :before-close="clearForm">
+              <div slot="header">新建属性</div>
               <div class="p20" slot="content">
                 <bk-form :label-width="200" form-type="vertical" class="form">
-                  <!-- <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part">
-                  <router-link :to="{ name: 'model_detail', params: { schemaID: this.pk }}">请先创建模型字段</router-link>
-                  </bk-exception> -->
-                  <!-- <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
-                    <bk-input v-model="formData[field.id]"></bk-input>
-                  </bk-form-item> -->
                   <div>唯一标识</div>
                   <bk-input :placeholder="'请输入唯一标识'" style="margin-bottom: 15px;" v-model="postFieldData.name">
                   </bk-input>
@@ -70,13 +48,13 @@
             <div style="display: flex;width: 100%;flex-wrap: wrap;margin-top: 10px;margin-left: -5px;">
               <bk-exception v-if="schemaData.field.length===0" class="exception-wrap-item exception-part" type="empty" scene="part"> </bk-exception>
               <div v-for="(field,index) in schemaData.field" :key="'field'+index" class="card-demo" style="width: 200px;height: 60px;"
-                @click="customSettings.isShow = true">
+                @click="fieldDetail(field)">
                 <bk-card title="卡片标题" :show-foot="false" :show-head="false" style="width: 100%;height: 100%;">
                   <div style="display: flex;width: 100%;height: 100%;" class="b-card">
                     <div style="margin-left: 26px;margin-top: auto;margin-bottom: auto;">
                       <div style="color: darkgray;">{{field.alias}}</div>
                       <div style="display: flex;margin-top: 3px;">
-                        <div style="color: lightgray;font-size: 14px;margin-right: 10px;margin-top: auto;margin-bottom: auto;">{{field.value_type}}</div>
+                        <div style="color: lightgray;font-size: 14px;margin-right: 10px;margin-top: auto;margin-bottom: auto;">{{valueMap[field.value_type]}}</div>
                         <div style="color: lightgray;font-size: 14px;margin-top: auto;margin-bottom: auto;">{{field.name}}</div>
                       </div>
                     </div>
@@ -85,12 +63,6 @@
                 </bk-card>
               </div>
             </div>
-            <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true">
-              <div slot="header">{{ customSettings.title }}</div>
-              <div class="p20" slot="content">
-                自定义内容
-              </div>
-            </bk-sideslider>
           </div>
         </div>
         <div v-else-if="active=='relation'">
@@ -128,7 +100,8 @@
 import {
   ciField,
   createCiField,
-  readCISchema
+  readCISchema,
+  updateCiField
 } from '@/api/api'
 export default {
   name: 'modelDetail',
@@ -190,6 +163,7 @@ export default {
         isShow: false,
         title: '字段详情'
       },
+      valueMap: {'0': '整型', '1': '浮点型', '2': '文本型', '3': '日期时间', '4': '日期', '5': '时间', '6': 'JSON', '7': '字符串', '8': '枚举'},
       valueTypeMap: [{
         'type_id': 0,
         'name': '整型'
@@ -281,19 +255,35 @@ export default {
       })
     },
     postCreateField () {
-      createCiField(this.postFieldData).then((response) => {
-        this.$bkMessage({
-          theme: 'success',
-          message: '创建成功'
+      if (this.postFieldData['field_id']) {
+        updateCiField(this.postFieldData['field_id'], this.postFieldData).then((response) => {
+          this.$bkMessage({
+            theme: 'success',
+            message: '创建成功'
+          })
+          this.createFieldSettings.visible = false
+          this.readSchema()
+        }).catch((error) => {
+          this.$bkMessage({
+            theme: 'error',
+            message: error.message
+          })
         })
-        this.createFieldSettings.visible = false
-        this.readSchema()
-      }).catch((error) => {
-        this.$bkMessage({
-          theme: 'error',
-          message: error.message
+      } else {
+        createCiField(this.postFieldData).then((response) => {
+          this.$bkMessage({
+            theme: 'success',
+            message: '创建成功'
+          })
+          this.createFieldSettings.visible = false
+          this.readSchema()
+        }).catch((error) => {
+          this.$bkMessage({
+            theme: 'error',
+            message: error.message
+          })
         })
-      })
+      }
     },
     handlerIconClick () {
       console.log('123')
@@ -316,6 +306,19 @@ export default {
       if (name === 'unique') {
         this.getCiField({meta: '1', schema_id: this.pk})
       }
+    },
+    fieldDetail (raw) {
+      this.postFieldData.field_id = raw.id
+      this.postFieldData.name = raw.name
+      this.postFieldData.alias = raw.alias
+      this.postFieldData.value_type = raw.value_type
+      this.createFieldSettings.visible = true
+    },
+    clearForm () {
+      this.postFieldData.name = ''
+      this.postFieldData.alias = ''
+      this.postFieldData.value_type = ''
+      this.createFieldSettings.visible = false
     }
   }
 }

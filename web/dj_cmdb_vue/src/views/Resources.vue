@@ -6,7 +6,8 @@
       <bk-button theme="primary" @click="customSettings.isShow=true">新建</bk-button>
       <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
     </div>
-    <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true" :width="customSettings.width">
+    <!-- 新建ci的侧边栏 -->
+    <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true" :width="customSettings.width" :before-close="clearFormData">
       <div slot="header">{{ customSettings.title }}</div>
       <div class="p20" slot="content">
         <bk-form :label-width="200" form-type="vertical" class="form">
@@ -18,12 +19,12 @@
           </bk-form-item>
           <bk-form-item class="mt20" style="flex-basis: 100%;">
             <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
-            <bk-button  v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="customSettings.isShow=false">取消</bk-button>
+            <bk-button  v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="clearFormData">取消</bk-button>
           </bk-form-item>
         </bk-form>
       </div>
     </bk-sideslider>
-    <bk-table style="margin-top: 15px;" :data="ciData" :size="setting.size">
+    <bk-table style="margin-top: 15px;" :data="ciData" :size="setting.size" @cell-click="cellDetail">
       <bk-table-column v-for="field in setting.selectedFields" :key="field.id" :label="field.label" :prop="field.id">
       </bk-table-column>
       <bk-table-column type="setting">
@@ -120,6 +121,14 @@ export default {
           message: err.message
         })
       })
+    },
+    cellDetail (raw) {
+      this.customSettings.isShow = true
+      this.formData = raw
+    },
+    clearFormData () {
+      this.customSettings.isShow = false
+      this.formData = {}
     }
 
   },
