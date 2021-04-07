@@ -10,7 +10,7 @@
         <div class="item-title">{{schemaGroup.alias}}</div>
         <bk-divider></bk-divider>
         <div v-for="(schema,index) in schemaGroup.schema" :key="'schema'+index" class="field">
-          <bk-icon type="pc" class="item-icon"/>
+          <i :class="schema.icon_url" class="item-icon"/>
           <div class="item-content" @click="redirctResource(schema)">{{schema.alias}}</div>
           <bk-icon :type="schema.is_show?'heart-shape':'heart'" :class="schema.is_show?'item-fav-display':'item-fav'" @click="handleFav(schema.id,schema.is_show)"/>
         </div>

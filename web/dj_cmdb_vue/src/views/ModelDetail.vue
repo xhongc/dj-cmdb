@@ -7,7 +7,7 @@
     <bk-divider style="margin: auto;"></bk-divider>
     <div style="height: 70px;background: #ebf4ff;">
       <div style="display: flex;height: 100%;">
-        <bk-icon type="apps" style="margin-top: auto;margin-bottom: auto;margin-left: 10px;margin-right: 20px;" />
+        <i :class="schemaData.icon_url" style="margin-top: auto;margin-bottom: auto;margin-left: 10px;margin-right: 20px;" />
         <div style="margin-top: auto;margin-bottom: auto;margin-right: 20px;">唯一标识：{{schemaData.name}}</div>
         <div style="margin-top: auto;margin-bottom: auto;margin-right: 20px;">名称：{{schemaData.alias}}</div>
         <!-- <div style="margin-top: auto;margin-bottom: auto;">实例数量：</div> -->
@@ -18,7 +18,7 @@
         <div v-if="active=='field'">
           <div>
             <bk-button theme="primary" @click="createFieldSettings.visible = true">新建属性</bk-button>
-            <bk-dialog v-model="createFieldSettings.visible" title="新建属性" :header-position="createFieldSettings.headerPosition"
+            <!-- <bk-dialog v-model="createFieldSettings.visible" title="新建属性" :header-position="createFieldSettings.headerPosition"
               :width="createFieldSettings.width" @confirm="postCreateField">
               <div>唯一标识</div>
               <bk-input :placeholder="'请输入唯一标识'" style="margin-bottom: 15px;" v-model="postFieldData.name">
@@ -32,7 +32,38 @@
                 <bk-option v-for="item in valueTypeMap" :key="item.type_id" :id="item.type_id" :name="item.name">
                 </bk-option>
               </bk-select>
-            </bk-dialog>
+            </bk-dialog> -->
+
+            <bk-sideslider :is-show.sync="createFieldSettings.visible" :quick-close="true" :width="createFieldSettings.width">
+              <div slot="header">123</div>
+              <div class="p20" slot="content">
+                <bk-form :label-width="200" form-type="vertical" class="form">
+                  <!-- <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part">
+                  <router-link :to="{ name: 'model_detail', params: { schemaID: this.pk }}">请先创建模型字段</router-link>
+                  </bk-exception> -->
+                  <!-- <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
+                    <bk-input v-model="formData[field.id]"></bk-input>
+                  </bk-form-item> -->
+                  <div>唯一标识</div>
+                  <bk-input :placeholder="'请输入唯一标识'" style="margin-bottom: 15px;" v-model="postFieldData.name">
+                  </bk-input>
+                  <div>属性名称</div>
+                  <bk-input :placeholder="'请输入属性名称'" style="margin-bottom: 15px;" v-model="postFieldData.alias">
+                  </bk-input>
+                  <div>字段类型</div>
+                  <bk-select :disabled="false" :search-with-pinyin="true" v-model="postFieldData.value_type" style="width: 250px;"
+                    ext-cls="select-custom" ext-popover-cls="select-popover-custom" searchable>
+                    <bk-option v-for="item in valueTypeMap" :key="item.type_id" :id="item.type_id" :name="item.name">
+                    </bk-option>
+                  </bk-select>
+                  <bk-form-item class="mt20" style="flex-basis: 100%;">
+                    <bk-button ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="postCreateField">提交</bk-button>
+                    <bk-button ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="createFieldSettings.visible=false">取消</bk-button>
+                  </bk-form-item>
+                </bk-form>
+              </div>
+            </bk-sideslider>
+
             <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
           </div>
           <div class="wrapper flex">
@@ -255,6 +286,7 @@ export default {
           theme: 'success',
           message: '创建成功'
         })
+        this.createFieldSettings.visible = false
         this.readSchema()
       }).catch((error) => {
         this.$bkMessage({

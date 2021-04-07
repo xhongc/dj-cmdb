@@ -172,6 +172,7 @@ export default {
       })
     },
     postCreateModel () {
+      this.postModelData['icon_url'] = this.icon_index_name
       ciSChema(this.postModelData).then((response) => {
         this.$bkMessage({
           theme: 'success',
@@ -186,9 +187,7 @@ export default {
       })
     },
     selectIcon () {
-      this.postCreateModel.icon = this.icons[this.icon_index]
       this.icon_index_name = this.icons[this.icon_index]
-      console.log('select', this.postCreateModel.icon)
     },
     postCreateGroup () {
       CreateSChemaGroup(this.postGroupData).then((response) => {
