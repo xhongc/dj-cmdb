@@ -1,0 +1,632 @@
+{
+  "id": "2467506",
+  "name": "cmdb",
+  "font_family": "iconfont",
+  "css_prefix_text": "cmdb-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "764235",
+      "name": "nginx",
+      "font_class": "nginx",
+      "unicode": "e69c",
+      "unicode_decimal": 59036
+    },
+    {
+      "icon_id": "764241",
+      "name": "Tomcat",
+      "font_class": "tomcat",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "816826",
+      "name": "apache",
+      "font_class": "apache",
+      "unicode": "e6c5",
+      "unicode_decimal": 59077
+    },
+    {
+      "icon_id": "837331",
+      "name": "windows",
+      "font_class": "windows",
+      "unicode": "e86f",
+      "unicode_decimal": 59503
+    },
+    {
+      "icon_id": "3172491",
+      "name": "Redis",
+      "font_class": "Redis",
+      "unicode": "e6a3",
+      "unicode_decimal": 59043
+    },
+    {
+      "icon_id": "3365990",
+      "name": "应用",
+      "font_class": "yingyong",
+      "unicode": "e658",
+      "unicode_decimal": 58968
+    },
+    {
+      "icon_id": "3876296",
+      "name": "linux",
+      "font_class": "linux",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "3876341",
+      "name": "nginx",
+      "font_class": "nginx1",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
+    {
+      "icon_id": "6487820",
+      "name": "集群",
+      "font_class": "jiqun",
+      "unicode": "e67a",
+      "unicode_decimal": 59002
+    },
+    {
+      "icon_id": "6496026",
+      "name": "Vue",
+      "font_class": "Vue",
+      "unicode": "e799",
+      "unicode_decimal": 59289
+    },
+    {
+      "icon_id": "6510101",
+      "name": "主机组",
+      "font_class": "zhujizu",
+      "unicode": "e839",
+      "unicode_decimal": 59449
+    },
+    {
+      "icon_id": "6582360",
+      "name": "应用",
+      "font_class": "yingyong1",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    },
+    {
+      "icon_id": "6605083",
+      "name": "macos",
+      "font_class": "macos",
+      "unicode": "e6b2",
+      "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "7123309",
+      "name": "redis",
+      "font_class": "redis",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "7550245",
+      "name": "模块",
+      "font_class": "mokuai",
+      "unicode": "e693",
+      "unicode_decimal": 59027
+    },
+    {
+      "icon_id": "7556318",
+      "name": "MySQL",
+      "font_class": "MySQL",
+      "unicode": "e63f",
+      "unicode_decimal": 58943
+    },
+    {
+      "icon_id": "7936073",
+      "name": "db_mysql_database",
+      "font_class": "db_mysql_database",
+      "unicode": "e7a2",
+      "unicode_decimal": 59298
+    },
+    {
+      "icon_id": "7937608",
+      "name": "app_mw_weblogic_domain",
+      "font_class": "app_mw_weblogic_domain",
+      "unicode": "e7c5",
+      "unicode_decimal": 59333
+    },
+    {
+      "icon_id": "9673170",
+      "name": "云主机",
+      "font_class": "yunzhuji",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "13744032",
+      "name": "vue",
+      "font_class": "vue",
+      "unicode": "e69a",
+      "unicode_decimal": 59034
+    },
+    {
+      "icon_id": "16562598",
+      "name": "主机",
+      "font_class": "zhuji",
+      "unicode": "e6df",
+      "unicode_decimal": 59103
+    },
+    {
+      "icon_id": "19709902",
+      "name": "集群",
+      "font_class": "cluster",
+      "unicode": "ebd5",
+      "unicode_decimal": 60373
+    },
+    {
+      "icon_id": "19853789",
+      "name": "应用",
+      "font_class": "zuixing-86",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "20104476",
+      "name": "MySQL",
+      "font_class": "MySQL1",
+      "unicode": "e610",
+      "unicode_decimal": 58896
+    },
+    {
+      "icon_id": "20113871",
+      "name": "bxl-django",
+      "font_class": "bxl-django",
+      "unicode": "e6f2",
+      "unicode_decimal": 59122
+    },
+    {
+      "icon_id": "881241",
+      "name": "磁盘",
+      "font_class": "ecs-disk",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "7983625",
+      "name": "磁盘",
+      "font_class": "xingzhuang",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
+      "icon_id": "754748",
+      "name": "系统运维-部门",
+      "font_class": "xitongyunweibumen",
+      "unicode": "e640",
+      "unicode_decimal": 58944
+    },
+    {
+      "icon_id": "754749",
+      "name": "系统运维-打开文件夹",
+      "font_class": "xitongyunweidakaiwenjianjia",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "754750",
+      "name": "系统运维-添加",
+      "font_class": "xitongyunweitianjia",
+      "unicode": "e642",
+      "unicode_decimal": 58946
+    },
+    {
+      "icon_id": "754751",
+      "name": "系统运维-文件",
+      "font_class": "xitongyunweiwenjian",
+      "unicode": "e643",
+      "unicode_decimal": 58947
+    },
+    {
+      "icon_id": "754752",
+      "name": "系统运维-文件夹01",
+      "font_class": "xitongyunweiwenjianjia01",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "754753",
+      "name": "系统运维-文件夹02",
+      "font_class": "xitongyunweiwenjianjia02",
+      "unicode": "e645",
+      "unicode_decimal": 58949
+    },
+    {
+      "icon_id": "754754",
+      "name": "系统运维-用户",
+      "font_class": "xitongyunweiyonghu",
+      "unicode": "e646",
+      "unicode_decimal": 58950
+    },
+    {
+      "icon_id": "754763",
+      "name": "系统运维保存授权",
+      "font_class": "xitongyunweibaocunshouquan",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "1249948",
+      "name": "运维管理",
+      "font_class": "yunweiguanli",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "1319977",
+      "name": "智能运维",
+      "font_class": "zhinengyunwei",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "1411059",
+      "name": "16运维管理",
+      "font_class": "yunweiguanli1",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "1411102",
+      "name": "19运维管理",
+      "font_class": "yunweiguanli2",
+      "unicode": "e63d",
+      "unicode_decimal": 58941
+    },
+    {
+      "icon_id": "1629995",
+      "name": "智慧运维",
+      "font_class": "zhihuiyunwei",
+      "unicode": "e6a8",
+      "unicode_decimal": 59048
+    },
+    {
+      "icon_id": "1986983",
+      "name": "运维管理",
+      "font_class": "yunweiguanli3",
+      "unicode": "e622",
+      "unicode_decimal": 58914
+    },
+    {
+      "icon_id": "2070654",
+      "name": "nav-运维中心",
+      "font_class": "nav-oper-center",
+      "unicode": "e6ee",
+      "unicode_decimal": 59118
+    },
+    {
+      "icon_id": "2198979",
+      "name": "运维申请",
+      "font_class": "oper-apply",
+      "unicode": "e73e",
+      "unicode_decimal": 59198
+    },
+    {
+      "icon_id": "2198984",
+      "name": "运维设备",
+      "font_class": "oper-equip",
+      "unicode": "e73f",
+      "unicode_decimal": 59199
+    },
+    {
+      "icon_id": "2198990",
+      "name": "特殊运维",
+      "font_class": "special-oper",
+      "unicode": "e740",
+      "unicode_decimal": 59200
+    },
+    {
+      "icon_id": "2205447",
+      "name": "批量运维",
+      "font_class": "batch-oper",
+      "unicode": "e752",
+      "unicode_decimal": 59218
+    },
+    {
+      "icon_id": "2207037",
+      "name": "nav-运维设置",
+      "font_class": "nav-set-oper",
+      "unicode": "e75f",
+      "unicode_decimal": 59231
+    },
+    {
+      "icon_id": "2459196",
+      "name": "运维管理",
+      "font_class": "maintenance",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
+      "icon_id": "2590785",
+      "name": "nav-运维中心-2",
+      "font_class": "nav-oper-center-t",
+      "unicode": "e796",
+      "unicode_decimal": 59286
+    },
+    {
+      "icon_id": "2958941",
+      "name": "车辆运维",
+      "font_class": "cheliangyunwei",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "2959109",
+      "name": "运维管理",
+      "font_class": "yunweiguanli4",
+      "unicode": "e637",
+      "unicode_decimal": 58935
+    },
+    {
+      "icon_id": "2959124",
+      "name": "终端运维",
+      "font_class": "zhongduanyunwei",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "3122220",
+      "name": "二级-运维报表",
+      "font_class": "erji-yunweibaobiao",
+      "unicode": "eabb",
+      "unicode_decimal": 60091
+    },
+    {
+      "icon_id": "3278348",
+      "name": "1运维管理",
+      "font_class": "yunweiguanli5",
+      "unicode": "e61d",
+      "unicode_decimal": 58909
+    },
+    {
+      "icon_id": "3457012",
+      "name": "运维人员",
+      "font_class": "yunweirenyuan",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "3607065",
+      "name": "绿洲_运维",
+      "font_class": "lvzhou_yunwei",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "3702593",
+      "name": "运维配置",
+      "font_class": "navicon-ywpz",
+      "unicode": "e63e",
+      "unicode_decimal": 58942
+    },
+    {
+      "icon_id": "4772858",
+      "name": "运维中心—执行记录",
+      "font_class": "yunweizhongxinzhihangjilu",
+      "unicode": "e654",
+      "unicode_decimal": 58964
+    },
+    {
+      "icon_id": "4772859",
+      "name": "运维中心—阻塞队列",
+      "font_class": "yunweizhongxinzusaiduilie",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "4772860",
+      "name": "运维中心—资产总览",
+      "font_class": "yunweizhongxinzichanzonglan",
+      "unicode": "e656",
+      "unicode_decimal": 58966
+    },
+    {
+      "icon_id": "4840855",
+      "name": "运维",
+      "font_class": "yunwei",
+      "unicode": "e6da",
+      "unicode_decimal": 59098
+    },
+    {
+      "icon_id": "5466489",
+      "name": "自动化运维-1",
+      "font_class": "oper-auto-1",
+      "unicode": "e7ca",
+      "unicode_decimal": 59338
+    },
+    {
+      "icon_id": "5466532",
+      "name": "自动化运维",
+      "font_class": "oper-auto",
+      "unicode": "e7cb",
+      "unicode_decimal": 59339
+    },
+    {
+      "icon_id": "5829499",
+      "name": "运维平台",
+      "font_class": "wulumuqishigongandashujuguanlipingtai-ico-",
+      "unicode": "e7e9",
+      "unicode_decimal": 59369
+    },
+    {
+      "icon_id": "6299257",
+      "name": "运维管理",
+      "font_class": "icon-",
+      "unicode": "e670",
+      "unicode_decimal": 58992
+    },
+    {
+      "icon_id": "6429424",
+      "name": "系统运维",
+      "font_class": "xitongyunwei",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "6601983",
+      "name": "tab_运维",
+      "font_class": "tab_yunwei",
+      "unicode": "e6ec",
+      "unicode_decimal": 59116
+    },
+    {
+      "icon_id": "7057565",
+      "name": "监控运维",
+      "font_class": "yunwei1",
+      "unicode": "e62e",
+      "unicode_decimal": 58926
+    },
+    {
+      "icon_id": "7287164",
+      "name": "运维管理",
+      "font_class": "yunweiguanli6",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "7698852",
+      "name": "11运维管理",
+      "font_class": "yunweiguanli7",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "8203684",
+      "name": "运维",
+      "font_class": "yunwei2",
+      "unicode": "e6b8",
+      "unicode_decimal": 59064
+    },
+    {
+      "icon_id": "8334931",
+      "name": "运维中心",
+      "font_class": "yunweizhongxin",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "9697602",
+      "name": "网站运维管理",
+      "font_class": "icon_xinyong_xianxing_jijin-",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "11429648",
+      "name": "运维中心",
+      "font_class": "yunweizhongxin1",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "11799006",
+      "name": "运维管理",
+      "font_class": "yunweiguanli8",
+      "unicode": "e650",
+      "unicode_decimal": 58960
+    },
+    {
+      "icon_id": "11810494",
+      "name": "运维管理",
+      "font_class": "yunweiguanli9",
+      "unicode": "e688",
+      "unicode_decimal": 59016
+    },
+    {
+      "icon_id": "12515462",
+      "name": "运维",
+      "font_class": "yunwei3",
+      "unicode": "e60b",
+      "unicode_decimal": 58891
+    },
+    {
+      "icon_id": "12717497",
+      "name": "运维工具",
+      "font_class": "yunweigongju",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "13866956",
+      "name": "运维伙伴",
+      "font_class": "yunwei4",
+      "unicode": "e64d",
+      "unicode_decimal": 58957
+    },
+    {
+      "icon_id": "14236690",
+      "name": "数据运维",
+      "font_class": "shujuyunwei",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "15232407",
+      "name": "运维管理",
+      "font_class": "yunweiguanli10",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    },
+    {
+      "icon_id": "15243406",
+      "name": "运维公司",
+      "font_class": "yunweigongsi",
+      "unicode": "e633",
+      "unicode_decimal": 58931
+    },
+    {
+      "icon_id": "16365919",
+      "name": "运维管理",
+      "font_class": "yunweiguanli11",
+      "unicode": "e6a2",
+      "unicode_decimal": 59042
+    },
+    {
+      "icon_id": "16620373",
+      "name": "设备运维预警设置",
+      "font_class": "shebeiyunweiyujingshezhi",
+      "unicode": "e620",
+      "unicode_decimal": 58912
+    },
+    {
+      "icon_id": "17523083",
+      "name": "运维-系统检测",
+      "font_class": "yunwei-xitongjiance",
+      "unicode": "e61a",
+      "unicode_decimal": 58906
+    },
+    {
+      "icon_id": "17523091",
+      "name": "运维-检测报告",
+      "font_class": "yunwei-jiancebaogao",
+      "unicode": "e61b",
+      "unicode_decimal": 58907
+    },
+    {
+      "icon_id": "17523092",
+      "name": "运维-运维日志",
+      "font_class": "yunwei-yunweirizhi",
+      "unicode": "e61c",
+      "unicode_decimal": 58908
+    },
+    {
+      "icon_id": "19567222",
+      "name": "运维报表",
+      "font_class": "54yunweibaobiao",
+      "unicode": "e687",
+      "unicode_decimal": 59015
+    },
+    {
+      "icon_id": "20155651",
+      "name": "全网运维服务流程_线性_-01-01",
+      "font_class": "quanwangyunweifuwuliucheng_xianxing_-01-01",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    }
+  ]
+}

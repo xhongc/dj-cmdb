@@ -8,7 +8,7 @@ import 'bk-magic-vue/dist/bk-magic-vue.min.css'
 import './axios/'
 import Axios from 'axios'
 import less from 'less'
-
+import './assets/iconfont.css'
 Vue.config.productionTip = false
 Vue.use(bkMagic)
 Vue.use(less)
@@ -17,7 +17,9 @@ Vue.use(less)
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })
 Vue.prototype.$http = Axios
