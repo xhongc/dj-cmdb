@@ -47,3 +47,17 @@ export const createCi = params => {
 export const updateCiField = (pk, params) => {
   return axios.put(`${host}/ci_field/${pk}/`, params)
 }
+export const getSub = params => {
+  return axios.get(`${host}/subscription/`, {
+    params: params
+  })
+}
+export const createSub = params => {
+  return axios.post(`${host}/subscription/`, params)
+}
+export const deleteSub = (pk, params) => {
+  return axios.delete(`${host}/subscription/${pk}/`, params)
+}
+export const updateSub = (pk, params) => {
+  return axios.put(`${host}/subscription/${pk}/`, params)
+}

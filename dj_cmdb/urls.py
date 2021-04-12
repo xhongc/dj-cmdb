@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 
 from applications.cmdb.views import CISchemaViewSet, CIFieldViewSet, CIViewSet, CISchemaGroupViewSet
 from applications.relation.views import RelationViewSet
+from applications.subscription.views import SubscriptionViewSets
 
 router = DefaultRouter()
 router.register(r"ci_schema", CISchemaViewSet, basename="ci_schema")
@@ -15,10 +16,11 @@ router.register(r"ci_field", CIFieldViewSet, basename="ci_field")
 router.register(r"ci", CIViewSet, basename="ci")
 router.register(r"relation", RelationViewSet, basename="relation")
 router.register(r"ci_schema_group", CISchemaGroupViewSet, basename="ci_schema_group")
+router.register(r"subscription", SubscriptionViewSets, basename="subscription")
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="API接口文档",   # 必传
+        title="API接口文档",  # 必传
         default_version='v1',  # 必传
         description="这是一个接口文档",
     ),

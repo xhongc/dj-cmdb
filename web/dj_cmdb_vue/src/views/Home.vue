@@ -122,6 +122,11 @@ export default {
         icon: 'icon-apps',
         url: 'resource'
       },
+      bottomMenuSlider: {
+        name: '事件订阅',
+        icon: 'icon-apps',
+        url: 'sub'
+      },
       navMap: [{
         nav: 'left-right',
         needMenu: true,
@@ -280,6 +285,7 @@ export default {
             fields: response.data.data[index].field
           })
         }
+        childList.push(this.bottomMenuSlider)
         this.header.list[1].childSlider = childList
         this.nav.list = childList
         this.isMenu = true

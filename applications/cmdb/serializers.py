@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from applications.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
+from applications.subscription.signals import ci_create_signal
 
 
 class CIFieldSerializer(serializers.ModelSerializer):
@@ -139,9 +140,12 @@ class CISerializer(serializers.Serializer):
 
     def create(self, validated_data):
         try:
-            return CI.objects.add(validated_data["schema_id"], validated_data["field_value"])
+            instance = CI.objects.add(validated_data["schema_id"], validated_data["field_value"])
         except Exception as e:
             raise serializers.ValidationError(f'参数错误{str(e)}')
+        else:
+            ci_create_signal.send_robust(self.__class__, **validated_data)
+            return instance
 
     def update(self, instance, validated_data):
         return CI.objects.modify(instance_id=instance, schema_id=validated_data["schema_id"],

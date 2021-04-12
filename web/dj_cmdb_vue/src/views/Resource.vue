@@ -41,7 +41,6 @@ export default {
   methods: {
     getCiSChemaGroup () {
       ciSChemaGroup().then((response) => {
-        console.log('1')
         this.schemaGroupList = response.data.data
       }).catch((error) => {
         console.log('2', error)

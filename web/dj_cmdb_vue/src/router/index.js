@@ -7,6 +7,7 @@ import relation from '@/views/Relation.vue'
 import topo from '@/views/Topo.vue'
 import modelDetail from '@/views/ModelDetail.vue'
 import resources from '@/views/Resources.vue'
+import sub from '@/views/Sub.vue'
 Vue.use(Router)
 
 const includPush = Router.prototype.push
@@ -31,6 +32,11 @@ export default new Router({
         path: '/resource/',
         name: 'resource',
         component: resource
+      },
+      {
+        path: '/sub/',
+        name: 'sub',
+        component: sub
       },
       {
         path: '/relation/',

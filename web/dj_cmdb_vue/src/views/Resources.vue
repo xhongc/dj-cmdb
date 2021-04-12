@@ -115,6 +115,7 @@ export default {
         })
         this.customSettings.isShow = false
         this.getCIData()
+        this.formData = {}
       }).catch((err) => {
         this.$bkMessage({
           theme: 'error',
