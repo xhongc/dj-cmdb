@@ -107,7 +107,6 @@ export default {
       this.getCIData()
     },
     submitData () {
-      alert(JSON.stringify(this.formData))
       createCi({schema_id: this.pk, field_value: this.formData}).then((res) => {
         this.$bkMessage({
           theme: 'success',

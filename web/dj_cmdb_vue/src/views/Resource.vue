@@ -1,31 +1,37 @@
 <template>
   <div>
-    <div style="font-size: 20px;margin-left: 12px;margin: 14px;">资源目录</div>
-    <bk-divider></bk-divider>
     <div>
-      <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:left;margin-left: 20px;"></bk-input>
-    </div>
-    <div class="container">
-      <div v-for="(schemaGroup,index) in schemaGroupList" :key="'schemaGroup'+index" class="item">
-        <div class="item-title">{{schemaGroup.alias}}</div>
-        <bk-divider></bk-divider>
-        <div v-for="(schema,index) in schemaGroup.schema" :key="'schema'+index" class="field">
-          <i :class="schema.icon_url" class="item-icon"/>
-          <div class="item-content" @click="redirctResource(schema)">{{schema.alias}}</div>
-          <bk-icon :type="schema.is_show?'heart-shape':'heart'" :class="schema.is_show?'item-fav-display':'item-fav'" @click="handleFav(schema.id,schema.is_show)"/>
-        </div>
+      <div style="font-size: 20px;margin-left: 12px;margin: 14px;">资源目录</div>
+      <bk-divider></bk-divider>
+      <div>
+        <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:left;margin-left: 20px;"></bk-input>
       </div>
+    </div>
+    <div>
+      <div class="container">
+        <div v-for="(schemaGroup,index) in schemaGroupList" :key="'schemaGroup'+index" class="item">
+          <div class="item-title">{{schemaGroup.alias}}</div>
+          <bk-divider></bk-divider>
+          <div v-for="(schema,index) in schemaGroup.schema" :key="'schema'+index" class="field">
+            <i :class="schema.icon_url" class="item-icon" />
+            <div class="item-content" @click="redirctResource(schema)">{{schema.alias}}</div>
+            <bk-icon :type="schema.is_show?'heart-shape':'heart'" :class="schema.is_show?'item-fav-display':'item-fav'"
+              @click="handleFav(schema.id,schema.is_show)" />
+          </div>
+        </div>
 
-      <span class="item break"></span>
-      <span class="item break"></span>
-      <span class="item break"></span>
+        <span class="item break"></span>
+        <span class="item break"></span>
+        <span class="item break"></span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import {
-  ciSChemaGroup, patchCiSChema
+  ciSChemaGroup,
+  patchCiSChema
 } from '@/api/api'
 export default {
   name: 'resource',
@@ -48,7 +54,9 @@ export default {
     },
     handleFav (id, isShow) {
       console.log('item', id, isShow)
-      patchCiSChema(id, {is_show: !isShow}).then((response) => {
+      patchCiSChema(id, {
+        is_show: !isShow
+      }).then((response) => {
         this.$bkMessage({
           theme: 'success',
           message: isShow ? '取消导航成功' : '添加导航成功'
@@ -65,7 +73,11 @@ export default {
     redirctResource (schema) {
       this.$router.push({
         'name': 'resources',
-        'params': {'schemaID': schema.id, 'name': schema.alias, 'fields': schema.field}
+        'params': {
+          'schemaID': schema.id,
+          'name': schema.alias,
+          'fields': schema.field
+        }
       })
     }
   }
@@ -77,12 +89,14 @@ export default {
     margin-right: 12px;
     color: #3A84FF;
   }
+
   .item-fav {
     margin: auto auto;
     display: none;
     font-size: 14px !important;
     line-height: 14px;
   }
+
   .item-fav-display {
     margin: auto auto;
     display: block;
@@ -90,13 +104,16 @@ export default {
     line-height: 14px;
     color: #FFB400;
   }
+
   .field:hover {
     color: lightblue;
     cursor: pointer;
   }
-  .field:hover .item-fav{
+
+  .field:hover .item-fav {
     display: block;
   }
+
   .field {
     display: flex;
     margin-bottom: 12px;
