@@ -1,9 +1,10 @@
 #### 模型管理
-![img.png](img.png)
- ![img_1.png](img_1.png)
-![img_2.png](img_2.png)
-![img_3.png](img_3.png)
+
 ### todo
 
 -[ ] 6 枚举类型
 -[ ] 7 网关接口
+-[ ] 前端新建关系ui
+-[ ] 前端新建唯一标识ui
+-[ ] 操作日志
+-[ ] 内置登录支持统一登录

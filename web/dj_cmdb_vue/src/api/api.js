@@ -61,3 +61,6 @@ export const deleteSub = (pk, params) => {
 export const updateSub = (pk, params) => {
   return axios.put(`${host}/subscription/${pk}/`, params)
 }
+export const getTopo = params => {
+  return axios.get(`${host}/topo/`, params)
+}

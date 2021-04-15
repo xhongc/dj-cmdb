@@ -3,7 +3,7 @@
     <bk-navigation :header-title="nav.id" :side-title="nav.title" :default-open="true" :navigation-type="curNav.nav"
       :need-menu="curNav.needMenu">
       <template slot="side-icon">
-        <bk-icon type="execute" />
+        <img src="../assets/logo_res.svg" style="width: 50px;height: 50px;"/>
       </template>
       <template slot="header">
         <div class="monitor-navigation-header">
@@ -47,12 +47,12 @@
               </div>
             </template>
           </bk-popover>
-          <div class="header-help" :class="{ 'is-left': curNav.nav === 'left-right' }">
-            <svg class="bk-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
-              viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg">
-              <path d="M32,4C16.5,4,4,16.5,4,32c0,3.6,0.7,7.1,2,10.4V56c0,1.1,0.9,2,2,2h13.6C36,63.7,52.3,56.8,58,42.4S56.8,11.7,42.4,6C39.1,4.7,35.6,4,32,4z M31.3,45.1c-1.7,0-3-1.3-3-3s1.3-3,3-3c1.7,0,3,1.3,3,3S33,45.1,31.3,45.1z M36.7,31.7c-2.3,1.3-3,2.2-3,3.9v0.9H29v-1c-0.2-2.8,0.7-4.4,3.2-5.8c2.3-1.4,3-2.2,3-3.8s-1.3-2.8-3.3-2.8c-1.8-0.1-3.3,1.2-3.5,3c0,0.1,0,0.1,0,0.2h-4.8c0.1-4.4,3.1-7.4,8.5-7.4c5,0,8.3,2.8,8.3,6.9C40.5,28.4,39.2,30.3,36.7,31.7z"></path>
-            </svg>
-          </div>
+            <a class="header-help" :class="{ 'is-left': curNav.nav === 'left-right' }" href="https://github.com/xhongc/dj-cmdb" target="_blank">
+              <svg class="bk-icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;"
+                viewBox="0 0 64 64" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M32,4C16.5,4,4,16.5,4,32c0,3.6,0.7,7.1,2,10.4V56c0,1.1,0.9,2,2,2h13.6C36,63.7,52.3,56.8,58,42.4S56.8,11.7,42.4,6C39.1,4.7,35.6,4,32,4z M31.3,45.1c-1.7,0-3-1.3-3-3s1.3-3,3-3c1.7,0,3,1.3,3,3S33,45.1,31.3,45.1z M36.7,31.7c-2.3,1.3-3,2.2-3,3.9v0.9H29v-1c-0.2-2.8,0.7-4.4,3.2-5.8c2.3-1.4,3-2.2,3-3.8s-1.3-2.8-3.3-2.8c-1.8-0.1-3.3,1.2-3.5,3c0,0.1,0,0.1,0,0.2h-4.8c0.1-4.4,3.1-7.4,8.5-7.4c5,0,8.3,2.8,8.3,6.9C40.5,28.4,39.2,30.3,36.7,31.7z"></path>
+              </svg>
+            </a>
           <bk-popover theme="light navigation-message" :arrow="false" offset="-20, 10" placement="bottom-start"
             :tippy-options="{ 'hideOnClick': false }">
             <div class="header-user" :class="{ 'is-left': curNav.nav === 'left-right' }">
@@ -124,7 +124,7 @@ export default {
       },
       bottomMenuSlider: {
         name: '事件订阅',
-        icon: 'icon-apps',
+        icon: 'cmdb-yunweizhongxinzichanzonglan',
         url: 'sub'
       },
       navMap: [{
@@ -148,7 +148,7 @@ export default {
         id: '模型管理',
         toggle: true,
         submenuActive: true,
-        title: '配置管理数据库'
+        title: '配置平台'
       },
       header: {
         list: [{
@@ -195,6 +195,11 @@ export default {
           name: '分析表',
           id: 3,
           show: true
+        },
+        {
+          name: '审计',
+          id: 4,
+          show: true
         }
         ],
         active: 2,
@@ -217,8 +222,7 @@ export default {
       },
       user: {
         list: [
-          '项目管理',
-          '权限中心',
+          '个人信息',
           '退出'
         ]
       }
@@ -261,7 +265,6 @@ export default {
     handleChangeNav (item) {
       this.header.active = item.id
       this.nav.id = item.navActive
-      console.log('asd', item)
       if (item.id === 1) {
         this.getCISchemaFuc()
       } else {
@@ -280,7 +283,7 @@ export default {
         for (index in response.data.data) {
           childList.push({
             name: response.data.data[index].alias,
-            icon: 'icon-apps',
+            icon: response.data.data[index].icon_url,
             url: 'resources#' + response.data.data[index].id,
             fields: response.data.data[index].field
           })
