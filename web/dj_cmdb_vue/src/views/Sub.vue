@@ -2,7 +2,7 @@
   <div>
     <div class="sub-title">事件订阅</div>
     <bk-divider></bk-divider>
-    <div>
+    <div style="margin-left: 10px;margin-right: 10px;">
       <bk-button theme="primary" @click="customSettings.isShow=true">新建</bk-button>
       <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
     </div>
@@ -201,6 +201,7 @@ export default {
     resetSub (props, rows) {
       console.log(props, rows)
       this.customSettings.isShow = true
+      this.customSettings.title = '编辑事件订阅'
       this.formData = props
     },
     removeSub (props, rows) {
@@ -217,6 +218,7 @@ export default {
     },
     clearFormData () {
       this.customSettings.isShow = false
+      this.customSettings.title = '创建事件订阅'
       this.formData = {
         'name': '',
         'subscriber': '',

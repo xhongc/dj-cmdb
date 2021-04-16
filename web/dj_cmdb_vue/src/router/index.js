@@ -8,6 +8,7 @@ import topo from '@/views/Topo.vue'
 import modelDetail from '@/views/ModelDetail.vue'
 import resources from '@/views/Resources.vue'
 import sub from '@/views/Sub.vue'
+import audit from '@/views/audit.vue'
 Vue.use(Router)
 
 const includPush = Router.prototype.push
@@ -57,6 +58,11 @@ export default new Router({
         path: '/resources/:schemaID',
         name: 'resources',
         component: resources,
+      },
+      {
+        path: '/audit/',
+        name: 'audit',
+        component: audit,
       }
     ]
   }]

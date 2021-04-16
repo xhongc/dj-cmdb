@@ -51,6 +51,9 @@ class CIField(models.Model):
     class Meta:
         verbose_name = "模型字段"
 
+    def get_summary_title(self):
+        return f"{self.schema.alias}:属性:/{self.alias}"
+
 
 class Relation(models.Model):
     name = models.CharField("关系名称", max_length=32, null=False, blank=False, unique=True)

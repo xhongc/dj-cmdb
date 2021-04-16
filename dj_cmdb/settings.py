@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'applications.cmdb',
     'applications.relation',
     'applications.subscription',
+    'applications.system',
 ]
 
 MIDDLEWARE = [

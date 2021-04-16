@@ -199,7 +199,14 @@ export default {
         {
           name: '审计',
           id: 4,
-          show: true
+          show: true,
+          navActive: '操作审计',
+          toUrl: 'audit',
+          childSlider: [{
+            name: '操作审计',
+            icon: 'icon-apps',
+            url: 'audit'
+          }]
         }
         ],
         active: 2,

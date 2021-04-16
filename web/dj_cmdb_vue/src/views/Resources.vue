@@ -2,29 +2,37 @@
   <div>
     <div class="sub-title">{{this.$route.params.name}}</div>
     <bk-divider></bk-divider>
-    <div>
+    <div style="margin-left: 10px;margin-right: 10px;">
       <bk-button theme="primary" @click="customSettings.isShow=true">新建</bk-button>
       <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
     </div>
     <!-- 新建ci的侧边栏 -->
-    <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true" :width="customSettings.width" :before-close="clearFormData">
+    <bk-sideslider :is-show.sync="customSettings.isShow" :quick-close="true" :width="customSettings.width"
+      :before-close="clearFormData">
       <div slot="header">{{ customSettings.title }}</div>
       <div class="p20" slot="content">
         <bk-form :label-width="200" form-type="vertical" class="form">
           <bk-exception v-if="fieldList.length===0" class="exception-wrap-item exception-part" type="empty" scene="part">
-          <router-link :to="{ name: 'model_detail', params: { schemaID: this.pk }}">请先创建模型字段</router-link>
+            <router-link :to="{ name: 'model_detail', params: { schemaID: this.pk }}">请先创建模型字段</router-link>
           </bk-exception>
-          <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true" class="field-form">
+          <bk-form-item v-for="(field,index) in fieldList" :key="'field'+index" :label="field.label" :required="true"
+            class="field-form">
             <bk-input v-model="formData[field.id]"></bk-input>
           </bk-form-item>
-          <bk-form-item class="mt20" style="flex-basis: 100%;">
+          <!-- <bk-form-item class="mt20" style="flex-basis: 100%;">
             <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
-            <bk-button  v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="clearFormData">取消</bk-button>
-          </bk-form-item>
+            <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="clearFormData">取消</bk-button>
+          </bk-form-item> -->
+          <div style="flex-basis: 100%;position:fixed; right:0px; bottom:5px; z-index:999;width: 500px;background-color: white;">
+            <bk-divider style="margin: 0 0 8px;"></bk-divider>
+            <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="submitData">提交</bk-button>
+            <bk-button v-if="fieldList.length!==0" ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="clearFormData">取消</bk-button>
+          </div>
         </bk-form>
       </div>
     </bk-sideslider>
     <bk-table style="margin-top: 15px;" :data="ciData" :size="setting.size" @cell-click="cellDetail">
+      <bk-table-column label="ID" prop="ci_id" class-name="id-index" v-if="this.fieldList.length !== 0"></bk-table-column>
       <bk-table-column v-for="field in setting.selectedFields" :key="field.id" :label="field.label" :prop="field.id">
       </bk-table-column>
       <bk-table-column type="setting">
@@ -43,7 +51,8 @@
 
 <script>
 import {
-  getCI, createCi
+  getCI,
+  createCi
 } from '@/api/api'
 export default {
   name: 'resources',
@@ -74,7 +83,7 @@ export default {
       customSettings: {
         isShow: false,
         title: '创建' + this.$route.params.name,
-        width: 600
+        width: 500
       },
       formData: {}
     }
@@ -107,7 +116,10 @@ export default {
       this.getCIData()
     },
     submitData () {
-      createCi({schema_id: this.pk, field_value: this.formData}).then((res) => {
+      createCi({
+        schema_id: this.pk,
+        field_value: this.formData
+      }).then((res) => {
         this.$bkMessage({
           theme: 'success',
           message: '创建成功'
@@ -162,14 +174,20 @@ export default {
     margin: 14px;
     height: 23px;
   }
+
   .form {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
   }
+
   .field-form {
     width: 42%;
     margin-right: 30px;
     margin-top: 8px;
+  }
+  .id-index {
+    color: #3A84FF;
+    cursor: pointer;
   }
 </style>

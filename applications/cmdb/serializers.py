@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from applications.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
 from applications.subscription.signals import ci_create_signal
+from applications.system.models import AuditLog
 
 
 class CIFieldSerializer(serializers.ModelSerializer):
@@ -30,6 +31,12 @@ class CISchemaSerializer(serializers.ModelSerializer):
     class Meta:
         model = CISchema
         fields = "__all__"
+
+
+class CISchemaWithNameAliasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CISchema
+        fields = ("id", "name", "alias")
 
 
 class SchemaThroughRelationSerializer(serializers.ModelSerializer):
@@ -96,6 +103,11 @@ class CISchemaRelationSerializer(serializers.Serializer):
             raise serializers.ValidationError('关系不存在')
         return relation_id
 
+    def validate(self, attrs):
+        if SchemaThroughRelation.objects.filter(parent_id=attrs["source_id"], child_id=attrs["target_id"]).exists():
+            raise serializers.ValidationError("关系已存在")
+        return attrs
+
     def create(self, validated_data):
         pass
 
@@ -145,11 +157,21 @@ class CISerializer(serializers.Serializer):
             raise serializers.ValidationError(f'参数错误{str(e)}')
         else:
             ci_create_signal.send_robust(self.__class__, **validated_data)
+            username = self.context.get("request").user.username
+            AuditLog.simple_create(username, AuditLog.ADD, instance.schema.alias, instance.id)
             return instance
 
     def update(self, instance, validated_data):
-        return CI.objects.modify(instance_id=instance, schema_id=validated_data["schema_id"],
-                                 ci_data=validated_data["field_value"])
+        try:
+            instance = CI.objects.modify(instance_id=instance, schema_id=validated_data["schema_id"],
+                                         ci_data=validated_data["field_value"])
+        except Exception as e:
+            raise serializers.ValidationError(f'参数错误{str(e)}')
+        else:
+            ci_create_signal.send_robust(self.__class__, **validated_data)
+            username = self.context.get("request").user.username
+            AuditLog.simple_create(username, AuditLog.MODIFY, instance.schema.alias, instance.id)
+            return instance
 
 
 class CIUpdateSerializer(serializers.Serializer):

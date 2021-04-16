@@ -9,6 +9,7 @@ from rest_framework.routers import DefaultRouter
 from applications.cmdb.views import CISchemaViewSet, CIFieldViewSet, CIViewSet, CISchemaGroupViewSet
 from applications.relation.views import RelationViewSet, TopoViewSets
 from applications.subscription.views import SubscriptionViewSets
+from applications.system.views import AuditLogViewSet
 
 router = DefaultRouter()
 router.register(r"ci_schema", CISchemaViewSet, basename="ci_schema")
@@ -18,6 +19,7 @@ router.register(r"relation", RelationViewSet, basename="relation")
 router.register(r"ci_schema_group", CISchemaGroupViewSet, basename="ci_schema_group")
 router.register(r"subscription", SubscriptionViewSets, basename="subscription")
 router.register(r"topo", TopoViewSets, basename="topo")
+router.register(r"audit", AuditLogViewSet, basename="audit")
 
 schema_view = get_schema_view(
     openapi.Info(

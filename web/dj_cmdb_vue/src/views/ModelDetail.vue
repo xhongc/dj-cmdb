@@ -18,8 +18,9 @@
         <div v-if="active=='field'">
           <div>
             <bk-button theme="primary" @click="createFieldSettings.visible = true">新建属性</bk-button>
-            <bk-sideslider :is-show.sync="createFieldSettings.visible" :quick-close="true" :width="createFieldSettings.width" :before-close="clearForm">
-              <div slot="header">新建属性</div>
+            <bk-sideslider :is-show.sync="createFieldSettings.visible" :quick-close="true" :width="createFieldSettings.width"
+              :before-close="clearForm">
+              <div slot="header">{{createFieldSettings.title}}</div>
               <div class="p20" slot="content">
                 <bk-form :label-width="200" form-type="vertical" class="form">
                   <div>唯一标识</div>
@@ -34,10 +35,27 @@
                     <bk-option v-for="item in valueTypeMap" :key="item.type_id" :id="item.type_id" :name="item.name">
                     </bk-option>
                   </bk-select>
-                  <bk-form-item class="mt20" style="flex-basis: 100%;">
+
+                  <div v-if="postFieldData.value_type===8||postFieldData.value_type==='8'" style="margin-top: 10px ;">
+                    <div>枚举值</div>
+                    <div v-for="(item, index) in postFieldData.meta.enum" :key="'index'+index">
+                      <bk-input v-model="item.key" placeholder="请输入枚举键" class='enum-key'></bk-input>
+                      <bk-input v-model="item.value" placeholder="请输入枚举值" class='enum-value'></bk-input>
+                      <bk-icon type="minus-circle-shape" @click="rmEnum(index)" class='icon-rm'/>
+                      <bk-icon type="plus-circle-shape" v-if="postFieldData.meta.enum.length===index+1" @click="addEnum" class='icon-add'/>
+                    </div>
+                  </div>
+                  <div>是否必填
+                    <bk-switcher v-model="postFieldData.meta.is_required" theme="primary"></bk-switcher>
+                  </div>
+                  <div>是否唯一
+                    <bk-switcher v-model="postFieldData.meta.is_unique" theme="primary"></bk-switcher>
+                  </div>
+                  <div style="flex-basis: 100%;position:fixed; right:0px; bottom:5px; z-index:999;width: 500px;background-color: white;">
+                    <bk-divider style="margin: 0 0 8px;"></bk-divider>
                     <bk-button ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="postCreateField">提交</bk-button>
                     <bk-button ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="createFieldSettings.visible=false">取消</bk-button>
-                  </bk-form-item>
+                  </div>
                 </bk-form>
               </div>
             </bk-sideslider>
@@ -46,7 +64,8 @@
           </div>
           <div class="wrapper flex">
             <div style="display: flex;width: 100%;flex-wrap: wrap;margin-top: 10px;margin-left: -5px;">
-              <bk-exception v-if="schemaData.field.length===0" class="exception-wrap-item exception-part" type="empty" scene="part"> </bk-exception>
+              <bk-exception v-if="schemaData.field.length===0" class="exception-wrap-item exception-part" type="empty"
+                scene="part"> </bk-exception>
               <div v-for="(field,index) in schemaData.field" :key="'field'+index" class="card-demo" style="width: 200px;height: 60px;"
                 @click="fieldDetail(field)">
                 <bk-card title="卡片标题" :show-foot="false" :show-head="false" style="width: 100%;height: 100%;">
@@ -67,7 +86,7 @@
         </div>
         <div v-else-if="active=='relation'">
           <div>
-            <bk-button theme="primary">新建关系</bk-button>
+            <bk-button theme="primary" @click="createRelationSettings.visible = true">新建关系</bk-button>
             <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
           </div>
           <bk-table style="margin-top: 15px;" :data="relationData" :size="setting.size">
@@ -79,6 +98,36 @@
               </bk-table-setting-content>
             </bk-table-column>
           </bk-table>
+          <bk-sideslider :is-show.sync="createRelationSettings.visible" :quick-close="true" :width="createRelationSettings.width"
+            :before-close="clearRelationForm">
+            <div slot="header">新建关系</div>
+            <div class="p20" slot="content">
+              <bk-form :label-width="200" form-type="vertical" class="form">
+                <div>源模型</div>
+                <bk-select :disabled="false" :search-with-pinyin="true" v-model="postRelationData.source_id" style="width: 250px;"
+                  ext-cls="select-custom" ext-popover-cls="select-popover-custom" searchable>
+                  <bk-option v-for="item in schemaRelationSelect.schema" :key="item.id" :id="item.id" :name="item.alias">
+                  </bk-option>
+                </bk-select>
+                <div>目标模型</div>
+                <bk-select :disabled="false" :search-with-pinyin="true" v-model="postRelationData.target_id" style="width: 250px;"
+                  ext-cls="select-custom" ext-popover-cls="select-popover-custom" searchable>
+                  <bk-option v-for="item in schemaRelationSelect.schema" :key="item.id" :id="item.id" :name="item.alias">
+                  </bk-option>
+                </bk-select>
+                <div>关联关系</div>
+                <bk-select :disabled="false" :search-with-pinyin="true" v-model="postRelationData.relation_id" style="width: 250px;"
+                  ext-cls="select-custom" ext-popover-cls="select-popover-custom" searchable>
+                  <bk-option v-for="item in schemaRelationSelect.relation" :key="item.id" :id="item.id" :name="item.alias">
+                  </bk-option>
+                </bk-select>
+                <bk-form-item class="mt20" style="flex-basis: 100%;">
+                  <bk-button ext-cls="mr5" theme="primary" title="提交" @click.stop.prevent="postCreateRelation">提交</bk-button>
+                  <bk-button ext-cls="mr5" theme="default" title="取消" @click.stop.prevent="createRelationSettings.visible=false">取消</bk-button>
+                </bk-form-item>
+              </bk-form>
+            </div>
+          </bk-sideslider>
         </div>
         <div v-else>
           <bk-table style="margin-top: 15px;" :data="fieldList" :size="metaSetting.size">
@@ -101,17 +150,17 @@ import {
   ciField,
   createCiField,
   readCISchema,
-  updateCiField
+  updateCiField,
+  getSchemaRelationSelect,
+  createRelation
 } from '@/api/api'
 export default {
   name: 'modelDetail',
   mounted () {
     this.readSchema()
   },
-  computed: {
-  },
-  created () {
-  },
+  computed: {},
+  created () {},
   data () {
     const fields = [{
       id: 'source',
@@ -163,7 +212,17 @@ export default {
         isShow: false,
         title: '字段详情'
       },
-      valueMap: {'0': '整型', '1': '浮点型', '2': '文本型', '3': '日期时间', '4': '日期', '5': '时间', '6': 'JSON', '7': '字符串', '8': '枚举'},
+      valueMap: {
+        '0': '整型',
+        '1': '浮点型',
+        '2': '文本型',
+        '3': '日期时间',
+        '4': '日期',
+        '5': '时间',
+        '6': 'JSON',
+        '7': '字符串',
+        '8': '枚举'
+      },
       valueTypeMap: [{
         'type_id': 0,
         'name': '整型'
@@ -173,8 +232,8 @@ export default {
         'name': '浮点型'
       },
       {
-        'type_id': 2,
-        'name': '文本型'
+        'type_id': 7,
+        'name': '字符串'
       },
       {
         'type_id': 3,
@@ -189,19 +248,26 @@ export default {
         'name': '时间'
       },
       {
+        'type_id': 2,
+        'name': '文本型'
+      },
+      {
         'type_id': 6,
         'name': 'JSON'
       },
-      {
-        'type_id': 7,
-        'name': '字符串'
-      },
+
       {
         'type_id': 8,
         'name': '枚举'
       }
       ],
       createFieldSettings: {
+        title: '新建属性',
+        visible: false,
+        width: 500,
+        headerPosition: 'left'
+      },
+      createRelationSettings: {
         visible: false,
         width: 480,
         headerPosition: 'left'
@@ -211,10 +277,22 @@ export default {
         name: '',
         alias: '',
         value_type: '',
-        schema: this.$route.params.schemaID
+        schema: this.$route.params.schemaID,
+        meta: {
+          is_required: false,
+          is_unique: false,
+          'enum': [{'key': '', 'value': ''}]
+        }
+      },
+      postRelationData: {
+        source_id: this.$route.params.schemaID,
+        target_id: '',
+        relation_id: ''
       },
       fieldList: [],
-      schemaData: {field: []},
+      schemaData: {
+        field: []
+      },
       relationData: [],
       setting: {
         max: 3,
@@ -228,7 +306,8 @@ export default {
         fields: metaFields,
         selectedFields: metaFields.slice(0, 3),
         size: 'small'
-      }
+      },
+      schemaRelationSelect: {}
     }
   },
   methods: {
@@ -245,9 +324,15 @@ export default {
     },
     readSchema () {
       this.basicLoading = true
+      if (!this.pk) {
+        this.$router.push({
+          name: 'model'
+        })
+      }
       readCISchema(this.pk).then((response) => {
         this.basicLoading = false
         this.schemaData = response.data.data
+
         for (var i in this.schemaData.relation_schema) {
           this.schemaData.relation.push(this.schemaData.relation_schema[i])
         }
@@ -285,6 +370,30 @@ export default {
         })
       }
     },
+    postCreateRelation () {
+      console.log(this.postRelationData)
+      createRelation(this.postRelationData).then((res) => {
+        this.$bkMessage({
+          theme: 'success',
+          message: '创建成功'
+        })
+        this.createRelationSettings.visible = false
+        this.readSchema()
+      }).catch((err) => {
+        this.$bkMessage({
+          theme: 'error',
+          message: err.message
+        })
+      })
+    },
+    getSchemaRelation () {
+      getSchemaRelationSelect().then((res) => {
+        console.log(1)
+        this.schemaRelationSelect = res.data.data
+      }).catch((err) => {
+        console.log(err)
+      })
+    },
     handlerIconClick () {
       console.log('123')
     },
@@ -304,7 +413,12 @@ export default {
     },
     handleTab (name) {
       if (name === 'unique') {
-        this.getCiField({meta: '1', schema_id: this.pk})
+        this.getCiField({
+          meta: '1',
+          schema_id: this.pk
+        })
+      } else if (name === 'relation') {
+        this.getSchemaRelation()
       }
     },
     fieldDetail (raw) {
@@ -312,15 +426,36 @@ export default {
       this.postFieldData.name = raw.name
       this.postFieldData.alias = raw.alias
       this.postFieldData.value_type = raw.value_type
+      this.postFieldData.meta = raw.meta
+      this.createFieldSettings.title = '修改属性'
       this.createFieldSettings.visible = true
     },
     clearForm () {
       this.postFieldData.name = ''
       this.postFieldData.alias = ''
       this.postFieldData.value_type = ''
+      this.postFieldData.meta = {
+        is_required: false,
+        is_unique: false,
+        'enum': [{'key': '', 'value': ''}]
+      }
+      this.createFieldSettings.title = '新建属性'
       this.createFieldSettings.visible = false
+    },
+    clearRelationForm () {
+      this.createRelationSettings.visible = false
+    },
+    addEnum () {
+      this.postFieldData.meta.enum.push({'key': '', 'value': ''})
+    },
+    rmEnum (index) {
+      if (this.postFieldData.meta.enum.length === 1) {
+        return false
+      }
+      this.postFieldData.meta.enum.splice(index, 1)
     }
   }
+
 }
 </script>
 
@@ -340,5 +475,23 @@ export default {
 
   .bk-tab-section {
     padding: 10px;
+  }
+  .enum-key {
+    width: 100px;
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+  .enum-value{
+    width: 200px;
+    margin-right: 5px;
+    margin-top: 5px;
+  }
+  .icon-add {
+    color: lightgray;
+    cursor: pointer;
+  }
+  .icon-rm {
+    color: lightgray;
+    cursor: pointer;
   }
 </style>

@@ -64,3 +64,14 @@ export const updateSub = (pk, params) => {
 export const getTopo = params => {
   return axios.get(`${host}/topo/`, params)
 }
+export const getSchemaRelationSelect = params => {
+  return axios.get(`${host}/ci_schema/get_relation_select/`, params)
+}
+export const createRelation = params => {
+  return axios.post(`${host}/ci_schema/add_relation/`, params)
+}
+export const getAudit = params => {
+  return axios.get(`${host}/audit/`, {
+    params: params
+  })
+}

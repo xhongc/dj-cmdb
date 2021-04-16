@@ -6,11 +6,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from applications.cmdb.filters import CIFilter
-from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup
+from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup, \
+    Relation
 from applications.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
     CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
-    ReadCISchemaSerializer
-from component.drf.viewsets import GenericViewSet
+    ReadCISchemaSerializer, CISchemaWithNameAliasSerializer
+from applications.relation.serializers import RelationSerializer
+from applications.system.models import AuditLog
+from component.drf.viewsets import GenericViewSet, ModelAndLogViewSet
 
 
 class CISchemaViewSet(mixins.ListModelMixin,
@@ -39,10 +42,20 @@ class CISchemaViewSet(mixins.ListModelMixin,
     def add_relation(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        SchemaThroughRelation.objects.create(parent_id=serializer.validated_data['source_id'],
-                                             child_id=serializer.validated_data['target_id'],
-                                             relation_id=serializer.validated_data['relation_id'])
+        t = SchemaThroughRelation.objects.create(parent_id=serializer.validated_data['source_id'],
+                                                 child_id=serializer.validated_data['target_id'],
+                                                 relation_id=serializer.validated_data['relation_id'])
+        AuditLog.simple_create(request.user.username, AuditLog.ADD, "关联关系:",
+                               f"{t.parent.alias}={t.relation.alias}>{t.child.alias}")
         return Response({})
+
+    @action(methods=["get"], detail=False)
+    def get_relation_select(self, request, *args, **kwargs):
+        q = self.get_queryset()
+        r = Relation.objects.all()
+        schema_serializer = CISchemaWithNameAliasSerializer(q, many=True).data
+        relation_serializer = RelationSerializer(r, many=True).data
+        return Response({"schema": schema_serializer, "relation": relation_serializer})
 
 
 class CISchemaGroupViewSet(mixins.ListModelMixin,
@@ -55,11 +68,7 @@ class CISchemaGroupViewSet(mixins.ListModelMixin,
         return CISchemaGroupSerializer
 
 
-class CIFieldViewSet(mixins.ListModelMixin,
-                     mixins.CreateModelMixin,
-                     mixins.UpdateModelMixin,
-                     mixins.DestroyModelMixin,
-                     GenericViewSet):
+class CIFieldViewSet(ModelAndLogViewSet):
     """
     list:查看字段
     create:创建字段
