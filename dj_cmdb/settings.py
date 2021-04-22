@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -179,8 +180,28 @@ REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "component.drf.generics.exception_handler",
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
     "DEFAULT_FILTER_BACKENDS": ("django_filters.rest_framework.DjangoFilterBackend",),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ],
 
 }
+# drf-jwt配置
+
+JWT_AUTH = {
+    # 过期时间，生成的took七天之后不能使用
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    # 刷新时间 之后的token时间值
+    # 'JWT_ALLOW_REFRESH': True,
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    # 请求头携带的参数
+    'JWT_AUTH_HEADER_PREFIX': 'JWT',
+}
+
 SWAGGER_SETTINGS = {
     'DEFAULT_MODEL_RENDERING': 'example'
 }

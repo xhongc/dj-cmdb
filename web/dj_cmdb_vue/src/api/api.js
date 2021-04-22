@@ -75,3 +75,6 @@ export const getAudit = params => {
     params: params
   })
 }
+export const getToken = params => {
+  return axios.post(`${host}/token/`, params)
+}

@@ -3,7 +3,9 @@ from collections import defaultdict
 
 from rest_framework import mixins
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from applications.cmdb.filters import CIFilter
 from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup, \

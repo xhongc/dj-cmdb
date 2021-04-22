@@ -7,7 +7,7 @@ from rest_framework.response import Response
 class ApiGenericMixin(object):
     """API视图类通用函数"""
 
-    permission_classes = ()
+    # permission_classes = ()
 
     def finalize_response(self, request, response, *args, **kwargs):
         """统一数据返回格式"""

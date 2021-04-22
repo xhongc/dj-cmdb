@@ -10,6 +10,7 @@ from applications.cmdb.views import CISchemaViewSet, CIFieldViewSet, CIViewSet, 
 from applications.relation.views import RelationViewSet, TopoViewSets
 from applications.subscription.views import SubscriptionViewSets
 from applications.system.views import AuditLogViewSet
+from rest_framework_jwt.views import obtain_jwt_token
 
 router = DefaultRouter()
 router.register(r"ci_schema", CISchemaViewSet, basename="ci_schema")
@@ -32,6 +33,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r"^api/", include(router.urls)),
+    re_path(r'^api/token/', obtain_jwt_token),
+
 ]
 # 调试模式才显示
 if settings.DEBUG:

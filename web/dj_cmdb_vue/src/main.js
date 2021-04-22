@@ -9,6 +9,7 @@ import './axios/'
 import Axios from 'axios'
 import less from 'less'
 import './assets/iconfont.css'
+import store from '@/store/store.js'
 Vue.config.productionTip = false
 Vue.use(bkMagic)
 Vue.use(less)
@@ -17,6 +18,7 @@ Vue.use(less)
 new Vue({
   el: '#app',
   router,
+  store,
   components: {
     App
   },

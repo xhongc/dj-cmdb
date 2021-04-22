@@ -2,15 +2,15 @@
 import axios from 'axios'
 
 // 全局状态控制引入
-// import store from '../store/store'
+import store from '@/store/store'
 import router from '../router'
 
 // http request 拦截器
 axios.interceptors.request.use(
   config => {
-    // if (store.state.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
-    //   config.headers.Authorization = `JWT ${store.state.token}`
-    // }
+    if (store.state.token) { // 判断是否存在token，如果存在的话，则每个http header都加上token
+      config.headers.Authorization = `JWT ${store.state.token}`
+    }
     return config
   },
   err => {
