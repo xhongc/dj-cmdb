@@ -199,3 +199,23 @@ class CIUpdateSerializer(serializers.Serializer):
 
     def update(self, instance, validated_data):
         pass
+
+
+class CIRelationSerializer(serializers.Serializer):
+    schema_relation_id = serializers.IntegerField(required=True)
+    source_id = serializers.IntegerField(required=True)
+    target_id = serializers.IntegerField(required=True)
+
+
+class SchemaRelationSelectSerializer(serializers.ModelSerializer):
+    child_alias = serializers.CharField(source="child.alias")
+    child_id = serializers.CharField()
+    relation = serializers.CharField(source="relation.alias")
+
+    class Meta:
+        model = SchemaThroughRelation
+        fields = ("id", "child_alias", "relation", "child_id")
+
+
+class CIRelationSelectSerializer(serializers.Serializer):
+    pass

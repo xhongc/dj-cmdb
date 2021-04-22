@@ -290,7 +290,7 @@ class CIManager(models.Manager):
                 value_model, validated_value = self.verify_fields(field_mapping, field, value)
                 value_model.objects.update_or_create(ci_id=ci_id, field_id=field_mapping[field]["id"],
                                                      defaults={"value": validated_value})
-        return ci_id
+        return CI.objects.get(id=ci_id)
 
 
 class CI(models.Model):
@@ -299,3 +299,13 @@ class CI(models.Model):
 
     class Meta:
         verbose_name = "配置项"
+
+
+class CIThroughRelation(models.Model):
+    schema_relation = models.ForeignKey("SchemaThroughRelation", related_name="inst_relation", on_delete=models.CASCADE,
+                                        db_constraint=False)
+    parent = models.ForeignKey("CI", related_name="_child", on_delete=models.CASCADE, db_constraint=False)
+    child = models.ForeignKey("CI", related_name="_parent", on_delete=models.CASCADE, db_constraint=False)
+
+    class Meta:
+        verbose_name = "实例和模型关系穿梭表"

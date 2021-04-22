@@ -9,10 +9,10 @@ from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from applications.cmdb.filters import CIFilter
 from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup, \
-    Relation
+    Relation, CIThroughRelation
 from applications.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
     CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
-    ReadCISchemaSerializer, CISchemaWithNameAliasSerializer
+    ReadCISchemaSerializer, CISchemaWithNameAliasSerializer, CIRelationSerializer, SchemaRelationSelectSerializer
 from applications.relation.serializers import RelationSerializer
 from applications.system.models import AuditLog
 from component.drf.viewsets import GenericViewSet, ModelAndLogViewSet
@@ -98,6 +98,8 @@ class CIViewSet(mixins.RetrieveModelMixin,
     def get_serializer_class(self):
         if self.action == "update":
             return CIUpdateSerializer
+        elif self.action == "add_relation":
+            return CIRelationSerializer
         return CISerializer
 
     def retrieve(self, request, *args, **kwargs):
@@ -134,3 +136,18 @@ class CIViewSet(mixins.RetrieveModelMixin,
         field_value = serializer.validated_data["field_value"]
         CI.objects.modify(instance_id=ci.id, schema_id=kwargs["schema_id"], ci_data=field_value)
         return Response({})
+
+    @action(methods=["post"], detail=False)
+    def add_relation(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        CIThroughRelation.objects.create(schema_relation_id=serializer.validated_data["schema_relation_id"],
+                                         parent_id=serializer.validated_data["source_id"],
+                                         child_id=serializer.validated_data["target_id"])
+        return Response({})
+
+    @action(methods=["get"], detail=True)
+    def get_relation_select(self, request, *args, **kwargs):
+        schema_relation = SchemaThroughRelation.objects.filter(parent_id=kwargs["schema_id"])
+        schema_relation_serializer = SchemaRelationSelectSerializer(schema_relation, many=True).data
+        return Response(schema_relation_serializer)
