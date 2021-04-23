@@ -262,8 +262,7 @@ class CIManager(models.Manager):
                 value_model.objects.create(ci_id=ci_id, field_id=field_mapping[field]["id"], value=validated_value)
         return ci
 
-    @staticmethod
-    def verify_fields(field_mapping, field, value):
+    def verify_fields(self, field_mapping, field, value):
         """必須验证必填"""
         value_model = MODEL_TYPE_MAP[field_mapping[field]["value_type"]]
         value_validate = VALUE_VALIDATE[field_mapping[field]["value_type"]]
@@ -275,7 +274,13 @@ class CIManager(models.Manager):
             raise Exception(f"<{field_alias}>:{value} 类型不符合：{e}")
         meta_data = field_mapping[field]["meta"]
         if meta_data.get("is_unique", False):
-            if value_model.objects.filter(field_id=field_mapping[field]["id"], value=value).exists():
+            if hasattr(self, "instance_id"):
+                ci_id = self.instance_id
+                value_filter = value_model.objects.filter(field_id=field_mapping[field]["id"], value=value).exclude(
+                    ci_id=ci_id)
+            else:
+                value_filter = value_model.objects.filter(field_id=field_mapping[field]["id"], value=value)
+            if value_filter.exists():
                 field_alias = field_mapping[field]['alias']
                 raise Exception(f"<{field_alias}>:{value} 已存在")
         return value_model, validated_value
@@ -285,6 +290,7 @@ class CIManager(models.Manager):
             if not self.items_exists(schema_id, list(ci_data.keys())):
                 raise Exception("创建字段不属于/或不存在")
             ci_id = instance_id
+            self.instance_id = ci_id
             field_mapping = CIField.objects.get_field_mapping(names=list(ci_data.keys()), schema_id=schema_id)
             for field, value in ci_data.items():
                 value_model, validated_value = self.verify_fields(field_mapping, field, value)

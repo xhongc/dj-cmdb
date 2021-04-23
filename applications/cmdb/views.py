@@ -3,16 +3,15 @@ from collections import defaultdict
 
 from rest_framework import mixins
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from applications.cmdb.filters import CIFilter
 from applications.cmdb.models import CISchema, CIField, CI, MODEL_TYPE_MAP, SchemaThroughRelation, CISchemaGroup, \
     Relation, CIThroughRelation
 from applications.cmdb.serializers import CISchemaSerializer, CIFieldSerializer, CISerializer, CIUpdateSerializer, \
     CISchemaRelationSerializer, CISchemaGroupSerializer, CreateCISchemaGroupSerializer, ListCIFieldSerializer, \
-    ReadCISchemaSerializer, CISchemaWithNameAliasSerializer, CIRelationSerializer, SchemaRelationSelectSerializer
+    ReadCISchemaSerializer, CISchemaWithNameAliasSerializer, CIRelationSerializer, SchemaRelationSelectSerializer, \
+    CIThroughRelationSerializer
 from applications.relation.serializers import RelationSerializer
 from applications.system.models import AuditLog
 from component.drf.viewsets import GenericViewSet, ModelAndLogViewSet
@@ -151,3 +150,20 @@ class CIViewSet(mixins.RetrieveModelMixin,
         schema_relation = SchemaThroughRelation.objects.filter(parent_id=kwargs["schema_id"])
         schema_relation_serializer = SchemaRelationSelectSerializer(schema_relation, many=True).data
         return Response(schema_relation_serializer)
+
+
+class CIThroughRelationViewSets(mixins.ListModelMixin, GenericViewSet):
+    queryset = CIThroughRelation.objects.all()
+    serializer_class = CIThroughRelationSerializer
+    filterset_fields = {"parent_id": ("exact",)}
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        serializer = self.get_serializer(queryset, many=True).data
+        relation_data = defaultdict(lambda: defaultdict(list))
+        for relation in serializer:
+            relation_data[relation["schema_relation"]["id"]]["child_ids"].append(relation["child"])
+            relation_data[relation["schema_relation"]["id"]]["relation_name"] =\
+                f"{relation['schema_relation']['relation']}-{relation['schema_relation']['child_alias']}"
+        return Response(relation_data)

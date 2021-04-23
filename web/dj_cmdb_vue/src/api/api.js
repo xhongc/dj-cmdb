@@ -78,3 +78,8 @@ export const getAudit = params => {
 export const getToken = params => {
   return axios.post(`${host}/token/`, params)
 }
+export const getCIRelation = params => {
+  return axios.get(`${host}/ci_relation/`, {
+    params: params
+  })
+}

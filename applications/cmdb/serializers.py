@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from applications.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation
+from applications.cmdb.models import CISchema, CIField, CI, Relation, CISchemaGroup, SchemaThroughRelation, \
+    CIThroughRelation
 from applications.subscription.signals import ci_create_signal
 from applications.system.models import AuditLog
 
@@ -134,7 +135,7 @@ class CISerializer(serializers.Serializer):
 
     def save(self, **kwargs):
         validated_data = {**self.validated_data, **kwargs}
-
+        # 存在ci_id判断为更新
         if self.instance is not None:
             instance_id = validated_data["field_value"].pop("ci_id")
             self.instance = self.update(instance_id, validated_data)
@@ -219,3 +220,17 @@ class SchemaRelationSelectSerializer(serializers.ModelSerializer):
 
 class CIRelationSelectSerializer(serializers.Serializer):
     pass
+
+
+class ListCISerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CI
+        fields = ("id",)
+
+
+class CIThroughRelationSerializer(serializers.ModelSerializer):
+    schema_relation = SchemaRelationSelectSerializer()
+
+    class Meta:
+        model = CIThroughRelation
+        fields = ("id", "schema_relation", "child", "parent")

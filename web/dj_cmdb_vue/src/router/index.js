@@ -10,6 +10,7 @@ import resources from '@/views/Resources.vue'
 import sub from '@/views/Sub.vue'
 import audit from '@/views/Audit.vue'
 import login from '@/views/login.vue'
+import instDetail from '@/views/InstDetail.vue'
 Vue.use(Router)
 
 const includPush = Router.prototype.push
@@ -64,6 +65,11 @@ export default new Router({
         path: '/audit/',
         name: 'audit',
         component: audit,
+      },
+      {
+        path: '/inst_detail/',
+        name: 'inst_detail',
+        component: instDetail,
       }
     ]
   },

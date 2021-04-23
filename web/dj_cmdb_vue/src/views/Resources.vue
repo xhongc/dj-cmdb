@@ -135,8 +135,12 @@ export default {
       })
     },
     cellDetail (raw) {
-      this.customSettings.isShow = true
-      this.formData = raw
+      // this.customSettings.isShow = true
+      // this.formData = raw
+      console.log(raw)
+      var paramsData = this.$route.params
+      paramsData['raw'] = raw
+      this.$router.push({name: 'inst_detail', params: paramsData})
     },
     clearFormData () {
       this.customSettings.isShow = false
