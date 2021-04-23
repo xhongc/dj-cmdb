@@ -32,7 +32,7 @@
             <bk-button @click="groupSetting1.selected = 'list'" :class="groupSetting1.selected === 'list' ? 'is-selected' : ''">列表</bk-button>
             <bk-button @click="groupSetting1.selected = 'topo'" :class="groupSetting1.selected === 'topo' ? 'is-selected' : ''">拓扑</bk-button>
           </div>
-          <bk-collapse v-model="activeName" v-for="(relation,index) in ciRelationData" :key="'index'+index" @item-click="handlerClick">
+          <bk-collapse v-model="activeName" v-for="(relation,index) in ciRelationData" :key="'index'+index" @item-click="handlerClick" class="test">
             <bk-collapse-item :name="index">
               {{relation.relation_name}}-({{relation.child_ids.length}})
               <div slot="content" class="f13">{{relation.child_ids}}</div>
@@ -230,7 +230,7 @@ export default {
   .btn-group {
     float: right;
   }
-  .bk-collapse-item-header {
-    background-color: #dcdee5;
+  .test .bk-collapse-item .bk-collapse-item-header {
+    background-color: #dcdee5 !important;
   }
 </style>
