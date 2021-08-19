@@ -63,10 +63,10 @@
             <bk-input placeholder="搜索" right-icon="bk-icon icon-search" style="width: 308px;float:right;"></bk-input>
           </div>
           <div class="wrapper flex">
-            <div style="display: flex;width: 100%;flex-wrap: wrap;margin-top: 10px;margin-left: -5px;">
+            <draggable class="card-parent" v-model="schemaData.field" :options="{animation:380}" @change="change">
               <bk-exception v-if="schemaData.field.length===0" class="exception-wrap-item exception-part" type="empty"
                 scene="part"> </bk-exception>
-              <div v-for="(field,index) in schemaData.field" :key="'field'+index" class="card-demo" style="width: 200px;height: 60px;"
+              <div v-for="(field,index) in schemaData.field" :key="'field'+index" class="card-demo" style="width: 200px;height: 60px;position: relative;"
                 @click="fieldDetail(field)">
                 <bk-card title="卡片标题" :show-foot="false" :show-head="false" style="width: 100%;height: 100%;">
                   <div style="display: flex;width: 100%;height: 100%;" class="b-card">
@@ -81,7 +81,7 @@
                   </div>
                 </bk-card>
               </div>
-            </div>
+            </draggable>
           </div>
         </div>
         <div v-else-if="active=='relation'">
@@ -154,12 +154,16 @@ import {
   getSchemaRelationSelect,
   createRelation
 } from '@/api/api'
+import draggable from 'vuedraggable'
 export default {
   name: 'modelDetail',
   mounted () {
     this.readSchema()
   },
   computed: {},
+  components: {
+    draggable
+  },
   created () {},
   data () {
     const fields = [{
@@ -307,7 +311,9 @@ export default {
         selectedFields: metaFields.slice(0, 3),
         size: 'small'
       },
-      schemaRelationSelect: {}
+      schemaRelationSelect: {},
+      positionX: '',
+      positionY: ''
     }
   },
   methods: {
@@ -453,6 +459,9 @@ export default {
         return false
       }
       this.postFieldData.meta.enum.splice(index, 1)
+    },
+    change (evt) {
+      console.log('change', evt, this.schemaData.field)
     }
   }
 
@@ -467,8 +476,11 @@ export default {
 
   .b-detail {
     display: none;
+    cursor: pointer;
   }
-
+  .b-card {
+    cursor: move;
+  }
   .b-card:hover .b-detail {
     display: block;
   }
@@ -493,5 +505,13 @@ export default {
   .icon-rm {
     color: lightgray;
     cursor: pointer;
+  }
+  .card-parent {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    margin-left: -5px;
+    cursor: move;
   }
 </style>

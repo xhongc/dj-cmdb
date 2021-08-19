@@ -110,7 +110,7 @@ export default {
     bkButton
   },
   mounted () {
-    // this.getCISchemaFuc()
+    this.handleChangeNav(this.header.list[1])
   },
   data () {
     return {
@@ -154,7 +154,14 @@ export default {
         list: [{
           name: '业务',
           id: 0,
-          show: true
+          show: true,
+          navActive: '业务拓扑',
+          toUrl: 'biz_topo',
+          childSlider: [{
+            name: '业务拓扑',
+            icon: 'icon-apps',
+            url: 'biz_topo'
+          }]
         },
         {
           name: '资源',
@@ -192,13 +199,8 @@ export default {
           ]
         },
         {
-          name: '分析表',
-          id: 3,
-          show: true
-        },
-        {
           name: '审计',
-          id: 4,
+          id: 3,
           show: true,
           navActive: '操作审计',
           toUrl: 'audit',
@@ -209,7 +211,7 @@ export default {
           }]
         }
         ],
-        active: 2,
+        active: 1,
         bizId: 1
       },
       message: {
@@ -272,6 +274,7 @@ export default {
     handleChangeNav (item) {
       this.header.active = item.id
       this.nav.id = item.navActive
+      // 资源侧边栏
       if (item.id === 1) {
         this.getCISchemaFuc()
       } else {
